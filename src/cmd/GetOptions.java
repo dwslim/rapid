@@ -26,6 +26,7 @@ public class GetOptions {
 		options.addOption("p", "path", true, "the path to the trace file/folder (Required)");
 		options.addOption("v", "verbosity", true, "for setting verbosity: Allowed levels = 0, 1, 2 (Default : 0)");
         options.addOption("m", "excluded-methods", true, "path to file that lists methods to be excluded");
+        options.addOption("r", "sampling-rate", true, "sampling rate between 0 and 1 (e.g 0.03 for 3%)");
 	}
 
 	public CmdOptions parse() {
@@ -39,11 +40,11 @@ public class GetOptions {
 				help();
 
 			if (cmd.hasOption("f")) {
-				cmdOpt.parserType = ParserType.getType(cmd.getOptionValue("f")) ;   
-			} 
+				cmdOpt.parserType = ParserType.getType(cmd.getOptionValue("f")) ;
+			}
 
 			if (cmd.hasOption("s")) {
-				cmdOpt.multipleRace = false;  
+				cmdOpt.multipleRace = false;
 			}
 
 			if (cmd.hasOption("v")) {
@@ -59,15 +60,19 @@ public class GetOptions {
 			}
 
 			if (cmd.hasOption("p")) {
-				cmdOpt.path = cmd.getOptionValue("p") ;   
+				cmdOpt.path = cmd.getOptionValue("p") ;
 			}
 			else {
 				log.log(Level.INFO, "MIssing path to file/folder");
 				help();
 			}
-			
+
             if (cmd.hasOption("m")) {
-                cmdOpt.excludeList = cmd.getOptionValue("m") ;   
+                cmdOpt.excludeList = cmd.getOptionValue("m") ;
+            }
+
+            if (cmd.hasOption("r")) {
+                cmdOpt.samplingRate = Double.parseDouble(cmd.getOptionValue("r"));
             }
 
 		} catch (ParseException e) {

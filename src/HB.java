@@ -7,14 +7,11 @@ public class HB {
 	public HB() {
 
 	}
-	
-	public static void main(String[] args) {		
+
+	public static void main(String[] args) {
 		CmdOptions options = new GetOptions(args).parse();
-		long startTimeAnalysis = System.currentTimeMillis();
-		HBEngine engine = new HBEngine(options.parserType, options.path);
+		HBEngine engine = new HBEngine(options.parserType, options.path, options.samplingRate);
 		engine.analyzeTrace(options.multipleRace, options.verbosity);
-		long stopTimeAnalysis = System.currentTimeMillis();
-		long timeAnalysis = stopTimeAnalysis - startTimeAnalysis;
-		System.out.println("Time for analysis = " + timeAnalysis + " milliseconds");
+		System.out.println("Time for analysis = " + engine.analysisTotalDuration + " milliseconds");
 	}
 }

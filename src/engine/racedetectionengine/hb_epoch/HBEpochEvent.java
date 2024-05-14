@@ -28,7 +28,7 @@ public class HBEpochEvent extends RaceDetectionEvent<HBEpochState> {
 				str += this.getThread().getName();
 				System.out.println(str);
 			}
-		}		
+		}
 	}
 
 	@Override
@@ -49,8 +49,8 @@ public class HBEpochEvent extends RaceDetectionEvent<HBEpochState> {
 				str += "|";
 				str += this.getAuxId();
 				System.out.println(str);
-			}	
-		}		
+			}
+		}
 	}
 
 	@Override
@@ -70,9 +70,9 @@ public class HBEpochEvent extends RaceDetectionEvent<HBEpochState> {
 				str += this.getThread().getName();
 				System.out.println(str);
 			}
-		}		
+		}
 	}
-	
+
 	@Override
 	public void printRaceInfoTransactionType(HBEpochState state, int verbosity) {
 	}
@@ -80,7 +80,7 @@ public class HBEpochEvent extends RaceDetectionEvent<HBEpochState> {
 	@Override
 	public boolean HandleSubAcquire(HBEpochState state, int verbosity) {
 		VectorClock H_t = state.getVectorClock(state.HBPredecessorThread, this.getThread());
-		VectorClock L_l = state.getVectorClock(state.lastReleaseLock, this.getLock());				
+		VectorClock L_l = state.getVectorClock(state.lastReleaseLock, this.getLock());
 		H_t.updateWithMax(H_t, L_l);
 		this.printRaceInfo(state, verbosity);
 		return false;
@@ -88,7 +88,7 @@ public class HBEpochEvent extends RaceDetectionEvent<HBEpochState> {
 
 	@Override
 	public boolean HandleSubRelease(HBEpochState state, int verbosity) {
-		VectorClock C_t = state.generateVectorClockFromClockThread(this.getThread());				
+		VectorClock C_t = state.generateVectorClockFromClockThread(this.getThread());
 		VectorClock L_l = state.getVectorClock(state.lastReleaseLock, this.getLock());
 		L_l.copyFrom(C_t);
 		state.incClockThread(getThread());
@@ -148,7 +148,7 @@ public class HBEpochEvent extends RaceDetectionEvent<HBEpochState> {
 	@Override
 	public boolean HandleSubFork(HBEpochState state, int verbosity) {
 		if (state.isThreadRelevant(this.getTarget())) {
-			VectorClock C_t = state.generateVectorClockFromClockThread(this.getThread());			
+			VectorClock C_t = state.generateVectorClockFromClockThread(this.getThread());
 			VectorClock H_tc = state.getVectorClock(state.HBPredecessorThread, this.getTarget());
 			// System.out.println("Fork : Setting HB of target");
 			H_tc.copyFrom(C_t);

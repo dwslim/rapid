@@ -1,16 +1,16 @@
 import cmd.CmdOptions;
 import cmd.GetOptions;
-import engine.racedetectionengine.hb_epoch.HBEpochEngine;
+import engine.racedetectionengine.minjian.MinjianEngine;
 
-public class HBEpoch {
+public class Minjian {
 
-	public HBEpoch() {
+	public Minjian() {
 
 	}
 
 	public static void main(String[] args) {
 		CmdOptions options = new GetOptions(args).parse();
-		HBEpochEngine engine = new HBEpochEngine(options.parserType, options.path, options.samplingRate);
+		MinjianEngine engine = new MinjianEngine(options.parserType, options.path, options.samplingRate);
 		engine.analyzeTrace(options.multipleRace, options.verbosity);
 		System.out.println("Time for analysis = " + engine.analysisTotalDuration + " milliseconds");
 	}

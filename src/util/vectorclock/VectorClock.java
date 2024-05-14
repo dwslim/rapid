@@ -101,16 +101,20 @@ public class VectorClock implements Comparable<VectorClock> {
 		}
 	}
 
-	private void updateMax2(VectorClock vc) {
+	public boolean updateMax2(VectorClock vc) {
 		if (!(this.dim == vc.getDim())) {
 			throw new IllegalArgumentException("Mismatch in this.dim and argument.dim");
 		}
+		boolean did_acquire = false;
 		for (int ind = 0; ind < this.dim; ind++) {
 			int this_c = this.clock.get(ind);
 			int vc_c = vc.clock.get(ind);
-			int max_c = this_c > vc_c ? this_c : vc_c;
-			this.clock.set(ind, (Integer) max_c);
+			if (this_c < vc_c) {
+				this.clock.set(ind, vc_c);
+				did_acquire = true;
+			}
 		}
+		return did_acquire;
 	}
 
 	// The following function update this as : this := \lambda t . if t == tIndex

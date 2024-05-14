@@ -23,6 +23,7 @@ public abstract class RaceDetectionEngine<St extends State, RDE extends RaceDete
 	protected Long totalSkippedEvents;
 
 	protected boolean enablePrintStatus;
+	public long analysisTotalDuration;
 
 	public RaceDetectionEngine(ParserType pType) {
 		super(pType);
@@ -59,6 +60,8 @@ public abstract class RaceDetectionEngine<St extends State, RDE extends RaceDete
 
 	protected boolean analyzeEvent(RDE handlerEvent, int verbosity, Long eventCount) {
 		boolean raceDetected = false;
+
+		long analysisStartTime = System.currentTimeMillis();
 		try {
 			raceDetected = handlerEvent.Handle(state, verbosity);
 		} catch (OutOfMemoryError oome) {
@@ -69,6 +72,8 @@ public abstract class RaceDetectionEngine<St extends State, RDE extends RaceDete
 		if (verbosity == 3 && handlerEvent.getType().isAccessType()) {
 			System.out.println("|" + Long.toString(eventCount));
 		}
+		long analysisEndTime = System.currentTimeMillis();
+		analysisTotalDuration += analysisEndTime - analysisStartTime;
 
 		if (raceDetected) {
 			// raceCount ++;
