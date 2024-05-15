@@ -1,4 +1,4 @@
-package engine.racedetectionengine.minjian;
+package engine.racedetectionengine.uclock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import event.Thread;
 import event.Variable;
 import util.vectorclock.VectorClock;
 
-public class MinjianState extends State{
+public class UClockState extends State{
 
 	// Internal data
 	private HashMap<Thread, Integer> threadToIndex;
@@ -33,7 +33,7 @@ public class MinjianState extends State{
 	public ArrayList<Integer> lockLastReleasedThreadIndices;
 	public ArrayList<Boolean> threadsSampledStatus;
 
-	public MinjianState(HashSet<Thread> tSet) {
+	public UClockState(HashSet<Thread> tSet) {
 		initInternalData(tSet);
 		initData(tSet);
 	}
