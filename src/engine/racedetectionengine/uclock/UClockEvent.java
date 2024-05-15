@@ -1,84 +1,80 @@
-package engine.racedetectionengine.minjian_epoch;
+package engine.racedetectionengine.uclock;
 
 import engine.racedetectionengine.RaceDetectionEvent;
-import util.vectorclock.SemiAdaptiveVC;
 import util.vectorclock.VectorClock;
 
-public class MinjianEpochEvent extends RaceDetectionEvent<MinjianEpochState> {
+public class UClockEvent extends RaceDetectionEvent<UClockState> {
+	public UClockEvent() {
+		super();
+	}
 
-	@Override
-	public boolean Handle(MinjianEpochState state, int verbosity) {
+	public boolean Handle(UClockState state, int verbosity){
 		return this.HandleSub(state, verbosity);
 	}
 
+	public boolean isReadOrWrite() {
+		return getType().isRead() || getType().isWrite();
+	}
+
+	/**************Pretty Printing*******************/
 	@Override
-	public void printRaceInfoLockType(MinjianEpochState state, int verbosity) {
-		if(this.getType().isLockType()){
-			if(verbosity == 2){
-				String str = "#";
-				str += Integer.toString(getLocId());
-				str += "|";
-				str += this.getType().toString();
-				str += "|";
-				str += this.getLock().toString();
-				str += "|";
-				VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
-				str += C_t.toString();
-				str += "|";
-				str += this.getThread().getName();
-				System.out.println(str);
-			}
+	public void printRaceInfoLockType(UClockState state, int verbosity){
+		if(verbosity >= 2){
+			String str = "#";
+			str += Integer.toString(getLocId());
+			str += "|";
+			str += this.getType().toString();
+			str += "|";
+			str += this.getLock().toString();
+			str += "|";
+			VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
+			str += C_t.toString();
+			str += "|";
+			str += this.getThread().getName();
+			System.out.println(str);
 		}
 	}
 
 	@Override
-	public void printRaceInfoAccessType(MinjianEpochState state, int verbosity) {
-		if(this.getType().isAccessType()){
-			if(verbosity == 1 || verbosity == 2){
-				String str = "#";
-				str += Integer.toString(getLocId());
-				str += "|";
-				str += this.getType().toString();
-				str += "|";
-				str += this.getVariable().getName();
-				str += "|";
-				VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
-				str += C_t.toString();
-				str += "|";
-				str += this.getThread().getName();
-				str += "|";
-				str += this.getAuxId();
-				System.out.println(str);
-			}
+	public void printRaceInfoAccessType(UClockState state, int verbosity){
+		if(verbosity >= 2){
+			String str = "#";
+			str += Integer.toString(getLocId());
+			str += "|";
+			str += this.getType().toString();
+			str += "|";
+			str += this.getVariable().getName();
+			str += "|";
+			VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
+			str += C_t.toString();
+			str += "|";
+			str += this.getThread().getName();
+			System.out.println(str);
 		}
 	}
 
 	@Override
-	public void printRaceInfoExtremeType(MinjianEpochState state, int verbosity) {
-		if(this.getType().isExtremeType()){
-			if(verbosity == 2){
-				String str = "#";
-				str += Integer.toString(getLocId());
-				str += "|";
-				str += this.getType().toString();
-				str += "|";
-				str += this.getTarget().toString();
-				str += "|";
-				VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
-				str += C_t.toString();
-				str += "|";
-				str += this.getThread().getName();
-				System.out.println(str);
-			}
+	public void printRaceInfoExtremeType(UClockState state, int verbosity){
+		if(verbosity >= 2){
+			String str = "#";
+			str += Integer.toString(getLocId());
+			str += "|";
+			str += this.getType().toString();
+			str += "|";
+			str += this.getTarget().toString();
+			str += "|";
+			VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
+			str += C_t.toString();
+			str += "|";
+			str += this.getThread().getName();
+			System.out.println(str);
 		}
 	}
+	/************************************************/
 
+	/**************Acquire/Release*******************/
 	@Override
-	public void printRaceInfoTransactionType(MinjianEpochState state, int verbosity) {
-	}
-
-	@Override
-	public boolean HandleSubAcquire(MinjianEpochState state, int verbosity) {
+	public boolean HandleSubAcquire(UClockState state, int verbosity){
 		// Acq(t, l):
 		// If U_l(LR_l) <= U_t(LR_l):
 		// 	Return
@@ -86,6 +82,7 @@ public class MinjianEpochEvent extends RaceDetectionEvent<MinjianEpochState> {
 		// If not (C_l ⊑ C_t):
 		// 	C_t := C_t join C_l
 		// 	U_t[t]++
+
 		VectorClock U_l = state.getVectorClock(state.lockAugmentedVCs, this.getLock());
 		VectorClock U_t = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
 		int lock_last_released_thread_index = state.getLockLastReleasedThreadIndex(this.getLock());
@@ -97,6 +94,7 @@ public class MinjianEpochEvent extends RaceDetectionEvent<MinjianEpochState> {
 		// Join the augmented VCs
 		U_t.updateMax2(U_l);
 
+		// Join the vanilla VC because we would loop through to check it anyway.
 		VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
 		VectorClock C_l = state.getVectorClock(state.lockVCs, this.getLock());
 		boolean did_acquire = C_t.updateMax2(C_l);
@@ -107,7 +105,7 @@ public class MinjianEpochEvent extends RaceDetectionEvent<MinjianEpochState> {
 	}
 
 	@Override
-	public boolean HandleSubRelease(MinjianEpochState state, int verbosity) {
+	public boolean HandleSubRelease(UClockState state, int verbosity) {
 		// Rel(t, l);
 		// If U_t(t) != U_l(t):
 		// 	 C_l := C_t join C_l // Also equivalent to “C_l := C_t”. When using tree clocks, use the “MonotoneCopy” function; see TC paper
@@ -117,7 +115,6 @@ public class MinjianEpochEvent extends RaceDetectionEvent<MinjianEpochState> {
 		//   U_t(t)++
 		// 	 C_t(t)++
 		// 	 smp_t := 0
-
 		VectorClock U_t = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
 		VectorClock U_l = state.getVectorClock(state.lockAugmentedVCs, this.getLock());
 		int tIdx = state.getThreadIndex(this.getThread());
@@ -143,62 +140,56 @@ public class MinjianEpochEvent extends RaceDetectionEvent<MinjianEpochState> {
 		this.printRaceInfo(state, verbosity);
 		return false;
 	}
+	/************************************************/
 
+	/****************Read/Write**********************/
 	@Override
-	public boolean HandleSubRead(MinjianEpochState state, int verbosity) {
+	public boolean HandleSubRead(UClockState state, int verbosity) {
 		state.setThreadSampledStatus(this.getThread(), true);
 
 		boolean raceDetected = false;
 		VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
-		SemiAdaptiveVC R_v = state.getAdaptiveVC(state.readVariable, getVariable());
-		SemiAdaptiveVC W_v = state.getAdaptiveVC(state.writeVariable, getVariable());
+		VectorClock R_v = state.getVectorClock(state.readVariableVCs, getVariable());
+		VectorClock W_v = state.getVectorClock(state.writeVariableVCs, getVariable());
 
 		this.printRaceInfo(state, verbosity);
 
 		if (!(W_v.isLessThanOrEqual(C_t))) {
 			raceDetected = true;
-			//			System.out.println("HB race detected on variable " + this.getVariable().getName());
 		}
-		else{
-			int tIndex = state.getThreadIndex(this.getThread());
-			int c = C_t.getClockIndex(tIndex);
-			if(!R_v.isSameEpoch(c, tIndex)){
-				R_v.updateWithMax(C_t, state.getThreadIndex(this.getThread()));
-			}
-		}
+
+		R_v.updateWithMax(R_v, C_t);
+
 		return raceDetected;
 	}
 
 	@Override
-	public boolean HandleSubWrite(MinjianEpochState state, int verbosity) {
+	public boolean HandleSubWrite(UClockState state, int verbosity) {
 		state.setThreadSampledStatus(this.getThread(), true);
 
 		boolean raceDetected = false;
 		VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
-		SemiAdaptiveVC R_v = state.getAdaptiveVC(state.readVariable, getVariable());
-		SemiAdaptiveVC W_v = state.getAdaptiveVC(state.writeVariable, getVariable());
+		VectorClock R_v = state.getVectorClock(state.readVariableVCs, getVariable());
+		VectorClock W_v = state.getVectorClock(state.writeVariableVCs, getVariable());
 
 		this.printRaceInfo(state, verbosity);
 
-		if (!(W_v.isLessThanOrEqual(C_t))) {
-			raceDetected = true;
-		}
 		if (!(R_v.isLessThanOrEqual(C_t))) {
 			raceDetected = true;
 		}
-		int tIndex = state.getThreadIndex(this.getThread());
-		int c = C_t.getClockIndex(tIndex);
-		if(!W_v.isSameEpoch(c, tIndex)){
-			W_v.setEpoch(c, tIndex);
-			if(!R_v.isEpoch()){
-				R_v.forceBottomEpoch();
-			}
+		if (!(W_v.isLessThanOrEqual(C_t))) {
+			raceDetected = true;
 		}
+
+		W_v.updateWithMax(W_v, C_t);
+
 		return raceDetected;
 	}
+	/************************************************/
 
+	/*****************Fork/Join**********************/
 	@Override
-	public boolean HandleSubFork(MinjianEpochState state, int verbosity) {
+	public boolean HandleSubFork(UClockState state,int verbosity) {
 		// Fork(tp, tc):
 		// 	 C_tc := C_tp[tc → 1]
 		// 	 U_tc := U_tp[tc → 1]
@@ -233,7 +224,7 @@ public class MinjianEpochEvent extends RaceDetectionEvent<MinjianEpochState> {
 	}
 
 	@Override
-	public boolean HandleSubJoin(MinjianEpochState state, int verbosity) {
+	public boolean HandleSubJoin(UClockState state,int verbosity) {
 		// Join(tp, tc):
 		// If U_tc(tc) <= U_tp(tc):
 		//   Return
@@ -263,16 +254,23 @@ public class MinjianEpochEvent extends RaceDetectionEvent<MinjianEpochState> {
 		}
 		return false;
 	}
-
+	/************************************************/
 
 	@Override
-	public boolean HandleSubBegin(MinjianEpochState state, int verbosity) {
+	public void printRaceInfoTransactionType(UClockState state, int verbosity) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean HandleSubBegin(UClockState state, int verbosity) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean HandleSubEnd(MinjianEpochState state, int verbosity) {
+	public boolean HandleSubEnd(UClockState state, int verbosity) {
+		// TODO Auto-generated method stub
 		return false;
 	}
-
 }

@@ -1,4 +1,4 @@
-package engine.racedetectionengine.minjian_epoch;
+package engine.racedetectionengine.uclock_epoch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import event.Variable;
 import util.vectorclock.SemiAdaptiveVC;
 import util.vectorclock.VectorClock;
 
-public class MinjianEpochState extends State {
+public class UClockEpochState extends State {
 
 	// Internal data
 	private HashMap<Thread, Integer> threadToIndex;
@@ -34,7 +34,7 @@ public class MinjianEpochState extends State {
 	public ArrayList<Integer> lockLastReleasedThreadIndices;
 	public ArrayList<Boolean> threadsSampledStatus;
 
-	public MinjianEpochState(HashSet<Thread> tSet) {
+	public UClockEpochState(HashSet<Thread> tSet) {
 		initInternalData(tSet);
 		initData(tSet);
 	}
