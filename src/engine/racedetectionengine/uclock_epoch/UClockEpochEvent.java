@@ -79,6 +79,7 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 
 	@Override
 	public boolean HandleSubAcquire(UClockEpochState state, int verbosity) {
+		state.numOriginalAcquires++;
 		// Acq(t, l):
 		// If U_l(LR_l) <= U_t(LR_l):
 		// 	Return
@@ -94,6 +95,8 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 		if (U_l.getClockIndex(lock_last_released_thread_index) <= U_t.getClockIndex(lock_last_released_thread_index))
 			return false;
 
+		state.numUClockAcquires++;
+
 		// Join the augmented VCs
 		U_t.updateMax2(U_l);
 
@@ -108,6 +111,7 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 
 	@Override
 	public boolean HandleSubRelease(UClockEpochState state, int verbosity) {
+		state.numOriginalReleases++;
 		// Rel(t, l);
 		// If U_t(t) != U_l(t):
 		// 	 C_l := C_t join C_l // Also equivalent to “C_l := C_t”. When using tree clocks, use the “MonotoneCopy” function; see TC paper
@@ -124,6 +128,7 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 
 		// Join if the lock doesn't know about the thread yet.
 		if (U_t.getClockIndex(tIdx) != U_l.getClockIndex(tIdx)) {
+			state.numUClockReleases++;
 			// Join the VCs.
 			VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
 			VectorClock C_l = state.getVectorClock(state.lockVCs, this.getLock());
@@ -234,6 +239,7 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 
 	@Override
 	public boolean HandleSubJoin(UClockEpochState state, int verbosity) {
+		state.numOriginalJoins++;
 		// Join(tp, tc):
 		// If U_tc(tc) <= U_tp(tc):
 		//   Return
@@ -248,6 +254,8 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 			// The parent already knows everything about the child.
 			int tcIdx = state.getThreadIndex(this.getTarget());
 			if (U_tc.getClockIndex(tcIdx) <= U_tp.getClockIndex(tcIdx)) return false;
+
+			state.numUClockJoins++;
 
 			// Join the augmented VCs
 			U_tp.updateMax2(U_tc);

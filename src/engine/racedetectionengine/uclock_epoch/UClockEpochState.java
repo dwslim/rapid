@@ -34,6 +34,14 @@ public class UClockEpochState extends State {
 	public ArrayList<Integer> lockLastReleasedThreadIndices;
 	public ArrayList<Boolean> threadsSampledStatus;
 
+	// stats
+	public int numOriginalAcquires;
+	public int numUClockAcquires;
+	public int numOriginalReleases;
+	public int numUClockReleases;
+	public int numOriginalJoins;
+	public int numUClockJoins;
+
 	public UClockEpochState(HashSet<Thread> tSet) {
 		initInternalData(tSet);
 		initData(tSet);
@@ -54,6 +62,13 @@ public class UClockEpochState extends State {
 		this.numLocks = 0;
 		this.variableToIndex = new HashMap<Variable, Integer>();
 		this.numVariables = 0;
+
+		this.numOriginalAcquires = 0;
+		this.numUClockAcquires = 0;
+		this.numOriginalReleases = 0;
+		this.numUClockReleases = 0;
+		this.numOriginalJoins = 0;
+		this.numUClockJoins = 0;
 	}
 
 	private void initialize1DArrayOfVectorClocksWithBottom(ArrayList<VectorClock> arr, int len) {
