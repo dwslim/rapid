@@ -127,8 +127,10 @@ public class OrderedClock {
         //parent of the new head is -1;
         parent[tid] = -1;
         //the old parent's child would the child of the current thread.
+        if(tempParent!=-1)
         children[tempParent] = children[tid];
         //similarly the parent of the child would be the parent of the thread.
+        if(children[tid]!=-1)
         parent[children[tid]] = tempParent;
         // the new child of the thread would be the old-head
         children[tid] = head;
