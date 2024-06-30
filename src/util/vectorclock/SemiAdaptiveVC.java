@@ -1,5 +1,5 @@
 package util.vectorclock;
-import src.engine.racedetectionengine.ordered_list.OrderedClock;
+import engine.racedetectionengine.ordered_list.OrderedClock;
 public class SemiAdaptiveVC extends AdaptiveVC{
 	
 	public SemiAdaptiveVC() {
@@ -49,12 +49,13 @@ public class SemiAdaptiveVC extends AdaptiveVC{
 			this.vc.setClockIndex(t, vc.getClockIndex(t));
 		}
 	}
-	//
+	// newly added case for the ordered clock comparsion
 
 	public void updateWithMax(OrderedClock o_t, int t){
 		VectorClock vc= o_t.getVC();
 		boolean isLTE = isLessThanOrEqual(vc);
 		if(is_epoch){
+			//in addtion check if threads are the same
 			if(t==this.epoch.getThreadIndex()||isLTE){
 				this.epoch.setClock(o_t.getE());
 				this.epoch.setThreadIndex(t);

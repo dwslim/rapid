@@ -1,4 +1,4 @@
-package src.engine.racedetectionengine.ordered_list;
+package engine.racedetectionengine.ordered_list;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -31,5 +31,7 @@ public class OrderedListEngine extends RaceDetectionEngine<OrderedListState, Ord
         return rng.nextDouble() >= samplingRate;
     }
 
-    protected void postHandleEvent(OrderedListEvent handlerEvent){}
+    protected void postHandleEvent(OrderedListEvent handlerEvent){
+
+    }
 }

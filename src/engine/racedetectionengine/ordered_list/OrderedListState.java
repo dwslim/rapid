@@ -1,10 +1,9 @@
-package src.engine.racedetectionengine.ordered_list;
+package engine.racedetectionengine.ordered_list;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import util.vectorclock.SemiAdaptiveVC;
 
 import engine.racedetectionengine.State;
@@ -64,7 +63,6 @@ public class OrderedListState extends State{
         this.threadsSampledStatus = new ArrayList<>();
         for (int i = 0; i < numThreads; ++i) this.threadsSampledStatus.add(false);
 
-        // initialize lastReleaseLock
         this.lockVCs = new ArrayList<OrderedClock>();
 
         // initialize readVariable
@@ -83,6 +81,7 @@ public class OrderedListState extends State{
 
     void initialize1DArrayOfOrderedClocksWithBottom(ArrayList<OrderedClock> arr, int len, int dim){
         for (int i = 0; i < len; i++) {
+            //let i be the thread id
             arr.add(new OrderedClock(dim,i));
         }
     }
@@ -129,10 +128,9 @@ public class OrderedListState extends State{
         }
         return arr.get(index);
     }
-
+    // inc epoch, just call the inc function that modifies two functions.
     public void incThreadEpoch(Thread t) {
         int tIndex = threadToIndex.get(t);
-        int origVal = this.threadVCs.get(tIndex).get(tIndex);
         this.threadVCs.get(tIndex).inc();
     }
 

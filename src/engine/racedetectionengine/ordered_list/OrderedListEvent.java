@@ -1,4 +1,4 @@
-package src.engine.racedetectionengine.ordered_list;
+package engine.racedetectionengine.ordered_list;
 
 import engine.racedetectionengine.RaceDetectionEvent;
 import util.vectorclock.SemiAdaptiveVC;
@@ -85,13 +85,18 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 
         VectorClock U_t = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
 
-        // Skip if the thread knows more information than the lock
+        //if released by this thread
+        if (O_l.getT()==O_t.getT()){
+            return false;
+        }
+         // Skip if the thread knows more information than the lock. init u of O_l is -1, and init u of U_t is 0.
         int diff = O_l.getU()-U_t.getClockIndex(O_l.getT());
         if (diff<=0)
             return false;
 
-        // Join the augmented VCs
+        // update the U vector clock.
         U_t.setClockIndex(O_l.getT(),O_l.getU());
+        //learn from the lock.
         O_t.updateWithMax(O_l,diff);
 
         this.printRaceInfo(state, verbosity);
@@ -100,14 +105,17 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 
     @Override
     public boolean HandleSubRelease(OrderedListState state, int verbosity) {
-
+        //if sampled, increment the epoch.
         if (state.didThreadSample(this.getThread())) {
+            //the inc function supposedly incremnt u and e.
             state.incThreadEpoch(this.getThread());
             state.setThreadSampledStatus(this.getThread(), false);
         }
         OrderedClock O_l = state.getOrderedClock(state.lockVCs, this.getThread());
         OrderedClock O_t = state.getOrderedClock(state.threadVCs, this.getThread());
+        //shallow copy.
         O_l.shallowCopy(O_t);
+        //mark that O_t is shared.
         O_t.setShared();
         this.printRaceInfo(state, verbosity);
         return false;
@@ -126,15 +134,16 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 
         this.printRaceInfo(state, verbosity);
 
-
+        //redefined the lessthan function so that it handles the case when threads are the same. Note that C_t[t] is a meaningless value.
         if (!(W_v.isLessThanOrEqual(C_t,tid))) {
             raceDetected = true;
-            //			System.out.println("HB race detected on variable " + this.getVariable().getName());
+            //		System.out.println("HB race detected on variable " + this.getVariable().getName());
         }
         else{
             int tIndex = state.getThreadIndex(this.getThread());
             int c = O_t.getE();
             if(!R_v.isSameEpoch(c, tIndex)){
+                //also refined the update function so that it learns from the dirty epoch.
                 R_v.updateWithMax(O_t, state.getThreadIndex(this.getThread()));
             }
         }

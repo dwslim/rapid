@@ -85,7 +85,7 @@ public class VectorClock implements Comparable<VectorClock> {
 		}
 		return itIsLessThanOrEqual;
 	}
-
+	//newly added function to to ignore the entry of tid. 
 	public boolean isLessThanOrEqual(VectorClock vc, int tid) {
 		if (!(this.dim == vc.getDim())) {
 			throw new IllegalArgumentException("Mismatch in this.dim and argument.dim");
