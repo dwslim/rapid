@@ -1,0 +1,208 @@
+package src.engine.racedetectionengine.ordered_list;
+
+import engine.racedetectionengine.RaceDetectionEvent;
+import util.vectorclock.SemiAdaptiveVC;
+import util.vectorclock.VectorClock;
+
+public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
+
+    @Override
+    public boolean Handle(OrderedListState state, int verbosity) {
+        return this.HandleSub(state, verbosity);
+    }
+
+    @Override
+    public void printRaceInfoLockType(OrderedListState state, int verbosity) {
+        if (this.getType().isLockType()) {
+            if (verbosity == 2) {
+                String str = "#";
+                str += Integer.toString(getLocId());
+                str += "|";
+                str += this.getType().toString();
+                str += "|";
+                str += this.getLock().toString();
+                str += "|";
+                OrderedClock C_t = state.getOrderedClock(state.threadVCs, this.getThread());
+                str += C_t.toString();
+                str += "|";
+                str += this.getThread().getName();
+                System.out.println(str);
+            }
+        }
+    }
+
+    @Override
+    public void printRaceInfoAccessType(OrderedListState state, int verbosity) {
+        if (this.getType().isAccessType()) {
+            if (verbosity == 1 || verbosity == 2) {
+                String str = "#";
+                str += Integer.toString(getLocId());
+                str += "|";
+                str += this.getType().toString();
+                str += "|";
+                str += this.getVariable().getName();
+                str += "|";
+                OrderedClock C_t = state.getOrderedClock(state.threadVCs, this.getThread());
+                str += C_t.toString();
+                str += "|";
+                str += this.getThread().getName();
+                str += "|";
+                str += this.getAuxId();
+                System.out.println(str);
+            }
+        }
+    }
+
+    @Override
+    public void printRaceInfoExtremeType(OrderedListState state, int verbosity) {
+        if (this.getType().isExtremeType()) {
+            if (verbosity == 2) {
+                String str = "#";
+                str += Integer.toString(getLocId());
+                str += "|";
+                str += this.getType().toString();
+                str += "|";
+                str += this.getTarget().toString();
+                str += "|";
+                OrderedClock C_t = state.getOrderedClock(state.threadVCs, this.getThread());
+                str += C_t.toString();
+                str += "|";
+                str += this.getThread().getName();
+                System.out.println(str);
+            }
+        }
+    }
+
+    @Override
+    public void printRaceInfoTransactionType(OrderedListState state, int verbosity) {
+    }
+
+    @Override
+    public boolean HandleSubAcquire(OrderedListState state, int verbosity) {
+
+        OrderedClock O_t = state.getOrderedClock(state.threadVCs, this.getThread());
+        OrderedClock O_l = state.getOrderedClock(state.lockVCs, this.getThread());
+
+        VectorClock U_t = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
+
+        // Skip if the thread knows more information than the lock
+        int diff = O_l.getU()-U_t.getClockIndex(O_l.getT());
+        if (diff<=0)
+            return false;
+
+        // Join the augmented VCs
+        U_t.setClockIndex(O_l.getT(),O_l.getU());
+        O_t.updateWithMax(O_l,diff);
+
+        this.printRaceInfo(state, verbosity);
+        return false;
+    }
+
+    @Override
+    public boolean HandleSubRelease(OrderedListState state, int verbosity) {
+
+        if (state.didThreadSample(this.getThread())) {
+            state.incThreadEpoch(this.getThread());
+            state.setThreadSampledStatus(this.getThread(), false);
+        }
+        OrderedClock O_l = state.getOrderedClock(state.lockVCs, this.getThread());
+        OrderedClock O_t = state.getOrderedClock(state.threadVCs, this.getThread());
+        O_l.shallowCopy(O_t);
+        O_t.setShared();
+        this.printRaceInfo(state, verbosity);
+        return false;
+    }
+
+    @Override
+    public boolean HandleSubRead(OrderedListState state, int verbosity) {
+        state.setThreadSampledStatus(this.getThread(), true);
+
+        boolean raceDetected = false;
+        OrderedClock O_t = state.getOrderedClock(state.threadVCs, this.getThread());
+        int tid = O_t.getT();
+        VectorClock C_t = O_t.getVC();
+        SemiAdaptiveVC R_v = state.getAdaptiveVC(state.readVariable, getVariable());
+        SemiAdaptiveVC W_v = state.getAdaptiveVC(state.writeVariable, getVariable());
+
+        this.printRaceInfo(state, verbosity);
+
+
+        if (!(W_v.isLessThanOrEqual(C_t,tid))) {
+            raceDetected = true;
+            //			System.out.println("HB race detected on variable " + this.getVariable().getName());
+        }
+        else{
+            int tIndex = state.getThreadIndex(this.getThread());
+            int c = O_t.getE();
+            if(!R_v.isSameEpoch(c, tIndex)){
+                R_v.updateWithMax(O_t, state.getThreadIndex(this.getThread()));
+            }
+        }
+        return raceDetected;
+    }
+
+    @Override
+    public boolean HandleSubWrite(OrderedListState state, int verbosity) {
+        state.setThreadSampledStatus(this.getThread(), true);
+        boolean raceDetected = false;
+        OrderedClock O_t = state.getOrderedClock(state.threadVCs, this.getThread());
+        int tid = O_t.getT();
+        VectorClock C_t = O_t.getVC();
+        SemiAdaptiveVC R_v = state.getAdaptiveVC(state.readVariable, getVariable());
+        SemiAdaptiveVC W_v = state.getAdaptiveVC(state.writeVariable, getVariable());
+
+        this.printRaceInfo(state, verbosity);
+
+        if (!(W_v.isLessThanOrEqual(C_t,tid))) {
+            raceDetected = true;
+        }
+        if (!(R_v.isLessThanOrEqual(C_t,tid))) {
+            raceDetected = true;
+        }
+        int tIndex = state.getThreadIndex(this.getThread());
+        int c = O_t.getE();
+        if (!W_v.isSameEpoch(c, tIndex)) {
+            W_v.setEpoch(c, tIndex);
+            if (!R_v.isEpoch()) {
+                R_v.forceBottomEpoch();
+            }
+        }
+        return raceDetected;
+    }
+
+    @Override
+    public boolean HandleSubFork(OrderedListState state, int verbosity) {
+        // Fork(tp, tc):
+        // 	 C_tc := C_tp[tc → 1]
+        // 	 U_tc := U_tp[tc → 1]
+        // 	 If (smp_tp):
+        //     U_tp(tp)++
+        // 	   C_tp(tp)++
+        // 	   smp_tp := 0
+      return false;
+    }
+
+    @Override
+    public boolean HandleSubJoin(OrderedListState state, int verbosity) {
+        // Join(tp, tc):
+        // If U_tc(tc) <= U_tp(tc):
+        //   Return
+        // U_tp := U_tp join U_tc
+        // If not (C_tc ⊑ C_tp):
+        //   C_tp := C_tp join C_tc
+        // 	 U_tp[tp]++
+
+        return false;
+    }
+
+
+    @Override
+    public boolean HandleSubBegin(OrderedListState state, int verbosity) {
+        return false;
+    }
+
+    @Override
+    public boolean HandleSubEnd(OrderedListState state, int verbosity) {
+        return false;
+    }
+}
