@@ -1,5 +1,5 @@
 package util.vectorclock;
-
+import src.engine.racedetectionengine.ordered_list.OrderedClock;
 public class SemiAdaptiveVC extends AdaptiveVC{
 	
 	public SemiAdaptiveVC() {
@@ -47,6 +47,27 @@ public class SemiAdaptiveVC extends AdaptiveVC{
 		}
 		else{
 			this.vc.setClockIndex(t, vc.getClockIndex(t));
+		}
+	}
+	//
+
+	public void updateWithMax(OrderedClock o_t, int t){
+		VectorClock vc= o_t.getVC();
+		boolean isLTE = isLessThanOrEqual(vc);
+		if(is_epoch){
+			if(t==this.epoch.getThreadIndex()||isLTE){
+				this.epoch.setClock(o_t.getE());
+				this.epoch.setThreadIndex(t);
+			}
+			else{
+				is_epoch = false;
+				this.vc = new VectorClock(vc.getDim());
+				this.vc.setClockIndex(this.epoch.getThreadIndex(), this.epoch.getClock());
+				this.vc.setClockIndex(t, o_t.getE());
+			}
+		}
+		else{
+			this.vc.setClockIndex(t, o_t.getE());
 		}
 	}
 }

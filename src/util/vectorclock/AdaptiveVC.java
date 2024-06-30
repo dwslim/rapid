@@ -47,6 +47,15 @@ public abstract class AdaptiveVC {
 			return this.vc.isLessThanOrEqual(vc);
 		}
 	}
+
+	public boolean isLessThanOrEqual(VectorClock vc, int tid) {
+		if(is_epoch){
+			return this.epoch.getThreadIndex()==tid|| this.epoch.getClock() <= vc.getClock().get(this.epoch.getThreadIndex());
+		}
+		else{
+			return this.vc.isLessThanOrEqual(vc,tid);
+		}
+	}
 	
 	//Returns true iff this.is_epoch and this.epoch.clock == vc[this.epoch.thread]
 	public boolean isSameEpoch(int c, int t){

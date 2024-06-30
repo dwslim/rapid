@@ -86,6 +86,27 @@ public class VectorClock implements Comparable<VectorClock> {
 		return itIsLessThanOrEqual;
 	}
 
+	public boolean isLessThanOrEqual(VectorClock vc, int tid) {
+		if (!(this.dim == vc.getDim())) {
+			throw new IllegalArgumentException("Mismatch in this.dim and argument.dim");
+		}
+		boolean itIsLessThanOrEqual = true;
+		Vector<Integer> vcClock = vc.getClock();
+		for (int ind = 0; ind < this.dim; ind++) {
+			if(ind == tid){
+				continue;
+			}
+			int thisVal = this.clock.get(ind).intValue();
+			int vcVal = vcClock.get(ind).intValue();
+			if (!(thisVal <= vcVal)) {
+				itIsLessThanOrEqual = false;
+				break;
+			}
+		}
+		return itIsLessThanOrEqual;
+	}
+
+
 	public void setToZero() {
 		for (int ind = 0; ind < this.dim; ind++) {
 			this.clock.set(ind, (Integer) 0);
