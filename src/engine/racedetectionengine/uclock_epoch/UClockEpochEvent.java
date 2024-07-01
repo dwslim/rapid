@@ -121,7 +121,10 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 		//   U_t(t)++
 		// 	 C_t(t)++
 		// 	 smp_t := 0
-
+		if (state.didThreadSample(this.getThread())) {
+			state.incThreadEpoch(this.getThread());			
+			state.setThreadSampledStatus(this.getThread(), false);
+		}
 		VectorClock U_t = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
 		VectorClock U_l = state.getVectorClock(state.lockAugmentedVCs, this.getLock());
 		int tIdx = state.getThreadIndex(this.getThread());
@@ -139,12 +142,6 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 			state.updateLockLastReleasedThreadIndex(this.getLock(), this.getThread());
 		}
 
-		if (state.didThreadSample(this.getThread())) {
-			state.incThreadEpoch(this.getThread());
-			state.incThreadAugmentedEpoch(this.getThread());
-			state.setThreadSampledStatus(this.getThread(), false);
-		}
-
 		this.printRaceInfo(state, verbosity);
 		return false;
 	}
@@ -155,20 +152,20 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 
 		boolean raceDetected = false;
 		VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
+		int tid = state.getThreadIndex(this.getThread());
 		SemiAdaptiveVC R_v = state.getAdaptiveVC(state.readVariable, getVariable());
 		SemiAdaptiveVC W_v = state.getAdaptiveVC(state.writeVariable, getVariable());
 
 		this.printRaceInfo(state, verbosity);
 
-		if (!(W_v.isLessThanOrEqual(C_t))) {
+		if (!(W_v.isLessThanOrEqual(C_t,tid))) {
 			raceDetected = true;
 			//			System.out.println("HB race detected on variable " + this.getVariable().getName());
 		}
 		else{
-			int tIndex = state.getThreadIndex(this.getThread());
-			int c = C_t.getClockIndex(tIndex);
-			if(!R_v.isSameEpoch(c, tIndex)){
-				R_v.updateWithMax(C_t, state.getThreadIndex(this.getThread()));
+			int c =state.getEpochtThread(this.getThread());
+			if(!R_v.isSameEpoch(c, tid)){
+				R_v.updateWithMax(C_t, c,state.getThreadIndex(this.getThread()));
 			}
 		}
 		return raceDetected;
@@ -179,22 +176,22 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 		state.setThreadSampledStatus(this.getThread(), true);
 
 		boolean raceDetected = false;
+		int tid = state.getThreadIndex(this.getThread());
 		VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
 		SemiAdaptiveVC R_v = state.getAdaptiveVC(state.readVariable, getVariable());
 		SemiAdaptiveVC W_v = state.getAdaptiveVC(state.writeVariable, getVariable());
 
 		this.printRaceInfo(state, verbosity);
 
-		if (!(W_v.isLessThanOrEqual(C_t))) {
+		if (!(W_v.isLessThanOrEqual(C_t,tid))) {
 			raceDetected = true;
 		}
-		if (!(R_v.isLessThanOrEqual(C_t))) {
+		if (!(R_v.isLessThanOrEqual(C_t,tid))) {
 			raceDetected = true;
 		}
-		int tIndex = state.getThreadIndex(this.getThread());
-		int c = C_t.getClockIndex(tIndex);
-		if(!W_v.isSameEpoch(c, tIndex)){
-			W_v.setEpoch(c, tIndex);
+		int c = state.getEpochtThread(this.getThread());
+		if(!W_v.isSameEpoch(c, tid)){
+			W_v.setEpoch(c, tid);
 			if(!R_v.isEpoch()){
 				R_v.forceBottomEpoch();
 			}
@@ -212,6 +209,11 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 		// 	   C_tp(tp)++
 		// 	   smp_tp := 0
 		if (state.isThreadRelevant(this.getTarget())) {
+
+			if (state.didThreadSample(this.getThread())) {
+				state.incThreadEpoch(this.getThread());
+				state.setThreadSampledStatus(this.getThread(), false);
+			}
 			VectorClock C_tp = state.getVectorClock(state.threadVCs, this.getThread());
 			VectorClock C_tc = state.getVectorClock(state.threadVCs, this.getTarget());
 			VectorClock U_tp = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
@@ -223,14 +225,8 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 
 			// And set the child's local epoch to 1
 			int tcIdx = state.getThreadIndex(this.getTarget());
-			C_tc.setClockIndex(tcIdx, 1);
 			U_tc.setClockIndex(tcIdx, 1);
 
-			if (state.didThreadSample(this.getThread())) {
-				state.incThreadEpoch(this.getThread());
-				state.incThreadAugmentedEpoch(this.getThread());
-				state.setThreadSampledStatus(this.getThread(), false);
-			}
 
 			this.printRaceInfo(state, verbosity);
 		}
@@ -248,6 +244,12 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 		//   C_tp := C_tp join C_tc
 		// 	 U_tp[tp]++
 		if (state.isThreadRelevant(this.getTarget())) {
+
+
+			if (state.didThreadSample(this.getTarget())) {
+				state.incThreadEpoch(this.getTarget());
+				state.setThreadSampledStatus(this.getTarget(), false);
+			}
 			VectorClock U_tp = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
 			VectorClock U_tc = state.getVectorClock(state.threadAugmentedVCs, this.getTarget());
 

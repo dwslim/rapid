@@ -32,9 +32,6 @@ public class OrderedClock {
     public OrderedClock(int d){
         this.u = -1;
     }
-    public OrderedClock(OrderedClock other){
-        deepCopy(other);
-    }
 
     public int getU(){
         return this.u;
@@ -77,18 +74,10 @@ public class OrderedClock {
         this.u = other.u;
 
     }
-    //deep copy, this function will not be called.
-    private void deepCopy(OrderedClock other){
-
-        this.VC = new VectorClock(other.VC);
-        this.parent = new int [other.parent.length];
-        this.children = new int [other.children.length];
-        for(int i = 0; i<parent.length;i++){
-            parent[i]=other.parent[i];
-            children[i] = other.children[i];
-        }
-        this.shared = false;
-
+    public void forkCopy(OrderedClock other){
+        int diff = other.u;
+        updateWithMax(other,diff);
+        
     }
     //deep copy called by the thread on itself.
     private void deepCopy(){
@@ -107,6 +96,7 @@ public class OrderedClock {
         //no need to change other scalars.
 
     }
+
 
     // returns value of the VC.
     public int get(int tid){
@@ -152,7 +142,7 @@ public class OrderedClock {
         //while not the end of list and count is not 0
         while(otherHead!=-1 && count!=0){
             //if current thread, go to next node.
-            if(otherHead==tid){
+            if(otherHead==tid||otherHead==other.tid){
                 count = count-1;
                 otherHead = other.children[otherHead];
                 continue;

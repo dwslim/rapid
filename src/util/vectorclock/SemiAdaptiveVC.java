@@ -49,6 +49,25 @@ public class SemiAdaptiveVC extends AdaptiveVC{
 			this.vc.setClockIndex(t, vc.getClockIndex(t));
 		}
 	}
+
+	public void updateWithMax(VectorClock vc, int tepoch, int t){
+		boolean isLTE = isLessThanOrEqual(vc);
+		if(is_epoch){
+			if(t==this.epoch.getThreadIndex()||isLTE){
+				this.epoch.setClock(tepoch);
+				this.epoch.setThreadIndex(t);
+			}
+			else{
+				is_epoch = false;
+				this.vc = new VectorClock(vc.getDim());
+				this.vc.setClockIndex(this.epoch.getThreadIndex(), this.epoch.getClock());
+				this.vc.setClockIndex(t, tepoch);
+			}
+		}
+		else{
+			this.vc.setClockIndex(t, tepoch);
+		}
+	}
 	// newly added case for the ordered clock comparsion
 
 	public void updateWithMax(OrderedClock o_t, int t){

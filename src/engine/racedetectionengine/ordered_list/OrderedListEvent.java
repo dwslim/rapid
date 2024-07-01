@@ -181,26 +181,49 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 
     @Override
     public boolean HandleSubFork(OrderedListState state, int verbosity) {
-        // Fork(tp, tc):
+         // Fork(tp, tc):
         // 	 C_tc := C_tp[tc → 1]
         // 	 U_tc := U_tp[tc → 1]
         // 	 If (smp_tp):
         //     U_tp(tp)++
         // 	   C_tp(tp)++
         // 	   smp_tp := 0
-      return false;
+        if (state.isThreadRelevant(this.getTarget())) {
+
+			if (state.didThreadSample(this.getThread())) {
+				state.incThreadEpoch(this.getThread());
+				state.setThreadSampledStatus(this.getThread(), false);
+			}
+			OrderedClock O_tp = state.getOrderedClock(state.threadVCs, this.getThread());
+			OrderedClock O_tc = state.getOrderedClock(state.threadVCs, this.getTarget());
+		    O_tc.forkCopy(O_tp);
+            
+
+
+			this.printRaceInfo(state, verbosity);
+		}
+		return false;
+       
     }
 
     @Override
     public boolean HandleSubJoin(OrderedListState state, int verbosity) {
-        // Join(tp, tc):
-        // If U_tc(tc) <= U_tp(tc):
-        //   Return
-        // U_tp := U_tp join U_tc
-        // If not (C_tc ⊑ C_tp):
-        //   C_tp := C_tp join C_tc
-        // 	 U_tp[tp]++
 
+        if (state.isThreadRelevant(this.getTarget())) {
+
+			if (state.didThreadSample(this.getTarget())) {
+				state.incThreadEpoch(this.getTarget());
+				state.setThreadSampledStatus(this.getTarget(), false);
+			}
+			OrderedClock O_tp = state.getOrderedClock(state.threadVCs, this.getThread());
+			OrderedClock O_tc = state.getOrderedClock(state.threadVCs, this.getTarget());
+            VectorClock U_t = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
+
+            int diff = O_tc.getU()-U_t.getClockIndex(O_tc.getT());
+		    O_tp.updateWithMax(O_tc, diff);
+            
+			this.printRaceInfo(state, verbosity);
+		}
         return false;
     }
 

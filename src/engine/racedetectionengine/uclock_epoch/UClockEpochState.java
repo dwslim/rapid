@@ -32,6 +32,8 @@ public class UClockEpochState extends State {
 	public ArrayList<VectorClock> threadAugmentedVCs;
 	public ArrayList<VectorClock> lockAugmentedVCs;
 	public ArrayList<Integer> lockLastReleasedThreadIndices;
+	public ArrayList<Integer> localEpoch;
+
 	public ArrayList<Boolean> threadsSampledStatus;
 
 	// stats
@@ -81,19 +83,17 @@ public class UClockEpochState extends State {
 		// initialize HBPredecessorThread
 		this.threadVCs = new ArrayList<VectorClock>();
 		initialize1DArrayOfVectorClocksWithBottom(this.threadVCs, this.numThreads);
-		for(int i=0; i < this.numThreads; i++){
-			this.threadVCs.get(i).setClockIndex(i, 1);
-		}
 
 		// initialize HBThreadAugmented
 		this.threadAugmentedVCs = new ArrayList<VectorClock>();
 		initialize1DArrayOfVectorClocksWithBottom(this.threadAugmentedVCs, this.numThreads);
-		for(int i=0; i < this.numThreads; i++){
-			this.threadAugmentedVCs.get(i).setClockIndex(i, 1);
-		}
 
+		this.localEpoch = new ArrayList<Integer>();
 		this.threadsSampledStatus = new ArrayList<>();
-		for (int i = 0; i < numThreads; ++i) this.threadsSampledStatus.add(false);
+		for (int i = 0; i < numThreads; ++i) 
+		{	this.localEpoch.add(1);
+			this.threadsSampledStatus.add(false);
+		}
 
 		// initialize lastReleaseLock
 		this.lockVCs = new ArrayList<VectorClock>();
@@ -145,10 +145,18 @@ public class UClockEpochState extends State {
 		return this.threadVCs.get(tIndex).getClockIndex(tIndex);
 	}
 
+	public int getEpochtThread(Thread t) {
+		int tIndex = threadToIndex.get(t);
+		return this.localEpoch.get(tIndex);
+	}
+
 	public void incThreadEpoch(Thread t) {
 		int tIndex = threadToIndex.get(t);
-		int origVal = this.threadVCs.get(tIndex).getClockIndex(tIndex);
-		this.threadVCs.get(tIndex).setClockIndex(tIndex, (Integer)(origVal + 1));
+		int origVal = this.localEpoch.get(tIndex);
+		this.threadVCs.get(tIndex).setClockIndex(tIndex, (Integer)(origVal));
+		incThreadAugmentedEpoch(t);
+		this.localEpoch.set(tIndex,(Integer)(origVal));
+
 	}
 
 	public void incThreadAugmentedEpoch(Thread t) {
