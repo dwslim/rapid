@@ -82,7 +82,7 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
         state.acquires++;
 
         OrderedClock O_t = state.getOrderedClock(state.threadVCs, this.getThread());
-        OrderedClock O_l = state.getOrderedClock(state.lockVCs, this.getThread());
+        OrderedClock O_l = state.getOrderedClock(state.lockVCs, this.getLock());
 
         VectorClock U_t = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
 
@@ -117,7 +117,7 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
             state.incThreadEpoch(this.getThread());
             state.setThreadSampledStatus(this.getThread(), false);
         }
-        OrderedClock O_l = state.getOrderedClock(state.lockVCs, this.getThread());
+        OrderedClock O_l = state.getOrderedClock(state.lockVCs, this.lock());
         OrderedClock O_t = state.getOrderedClock(state.threadVCs, this.getThread());
         //shallow copy.
         O_l.shallowCopy(O_t);
