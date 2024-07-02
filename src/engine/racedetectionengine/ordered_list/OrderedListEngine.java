@@ -12,14 +12,14 @@ public class OrderedListEngine extends RaceDetectionEngine<OrderedListState, Ord
     private Random rng;
     private double samplingRate;
 
-    public OrderedListEngine(ParserType pType, String trace_folder, double samplingRate) {
+    public OrderedListEngine(ParserType pType, String trace_folder, double samplingRate, int samplingRNGSeed) {
         super(pType);
         this.threadSet = new HashSet<Thread> ();
         initializeReader(trace_folder);
         this.state = new OrderedListState(this.threadSet);
         this.handlerEvent = new OrderedListEvent();
 
-        this.rng = new Random();
+        this.rng = new Random(samplingRNGSeed);
         this.samplingRate = samplingRate;
     }
 

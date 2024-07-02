@@ -75,6 +75,10 @@ public class GetOptions {
                 cmdOpt.samplingRate = Double.parseDouble(cmd.getOptionValue("r"));
             }
 
+            if (cmd.hasOption("S")) {
+                cmdOpt.samplingRNGSeed = Integer.parseInt(cmd.getOptionValue("S"));
+            }
+
 		} catch (ParseException e) {
 			help();
 		}

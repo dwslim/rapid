@@ -11,6 +11,7 @@ public class CmdOptions {
 	public int verbosity;
 	public String excludeList;
 	public double samplingRate;
+	public int samplingRNGSeed;
 
 	public CmdOptions() {
 		this.parserType = ParserType.CSV;
@@ -20,6 +21,7 @@ public class CmdOptions {
 		this.verbosity = 0;
 		this.excludeList = null;
 		this.samplingRate = 1;
+		samplingRNGSeed = 1234;
 	}
 	
 	public String toString(){
@@ -31,6 +33,7 @@ public class CmdOptions {
 		str += "verbosity		" + " = " + this.verbosity				+ "\n";
 		str += "excludeList		" + " = " + this.excludeList			+ "\n";
 		str += "samplingRate	" + " = " + this.samplingRate			+ "\n";
+		str += "samplingRate	" + " = " + this.samplingRNGSeed		+ "\n";
 		return str;
 	}
 

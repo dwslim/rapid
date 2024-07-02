@@ -79,6 +79,7 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 
     @Override
     public boolean HandleSubAcquire(OrderedListState state, int verbosity) {
+        state.acquires++;
 
         OrderedClock O_t = state.getOrderedClock(state.threadVCs, this.getThread());
         OrderedClock O_l = state.getOrderedClock(state.lockVCs, this.getThread());
@@ -108,6 +109,8 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 
     @Override
     public boolean HandleSubRelease(OrderedListState state, int verbosity) {
+        state.releases++;
+
         //if sampled, increment the epoch.
         if (state.didThreadSample(this.getThread())) {
             //the inc function supposedly incremnt u and e.
@@ -184,6 +187,8 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 
     @Override
     public boolean HandleSubFork(OrderedListState state, int verbosity) {
+        state.forks++;
+
          // Fork(tp, tc):
         // 	 C_tc := C_tp[tc → 1]
         // 	 U_tc := U_tp[tc → 1]
@@ -211,6 +216,7 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 
     @Override
     public boolean HandleSubJoin(OrderedListState state, int verbosity) {
+        state.joins++;
 
         if (state.isThreadRelevant(this.getTarget())) {
 
