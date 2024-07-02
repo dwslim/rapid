@@ -59,6 +59,9 @@ public class OrderedClock {
     public void setShared(){
         this.shared = true;
     }
+    public boolean getShared(){
+        return this.shared;
+    }
     //shallow copy. The lock would copy the threads information.
     public void shallowCopy(OrderedClock other){
 
@@ -112,6 +115,10 @@ public class OrderedClock {
     }
     //function that reorders list.
     public void move_to_head(int tid){
+        //if already head
+        if(head==tid){
+            return;
+        }
         //find the parent of the thread.
         int tempParent = parent[tid];
         //parent of the new head is -1;
@@ -129,13 +136,15 @@ public class OrderedClock {
     }
     //join function on two ordered lists.
 
-    public void updateWithMax(OrderedClock other, int diff){
+    public int updateWithMax(OrderedClock other, int diff){
 
         int otherHead = other.head;
         int count = diff ;
+        int updated = 0;
         //compare the dirty epoch.
         if(this.get(other.tid)<other.de){
             this.set(other.tid, other.de);
+            updated++;
             //increment u
             u++;
         }
@@ -152,10 +161,12 @@ public class OrderedClock {
             if(this.get(otherHead)<otherVal){
                 this.set(otherHead,otherVal);
                 u++;
+                updated++;
             }
             count = count-1;
             otherHead = other.children[otherHead];
         }
+        return updated;
 
 
     }

@@ -93,12 +93,15 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
         int diff = O_l.getU()-U_t.getClockIndex(O_l.getT());
         if (diff<=0)
             return false;
-
+        state.acqTraversed+=diff;
         // update the U vector clock.
+        boolean sharedbefore = O_t.getShared();
         U_t.setClockIndex(O_l.getT(),O_l.getU());
         //learn from the lock.
-        O_t.updateWithMax(O_l,diff);
-
+        state.acqUpdated+=O_t.updateWithMax(O_l,diff);
+        if(sharedbefore&&!O_t.getShared()){
+            state.deepcopies++;
+        }
         this.printRaceInfo(state, verbosity);
         return false;
     }
