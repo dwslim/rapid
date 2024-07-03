@@ -1,4 +1,6 @@
 package engine.racedetectionengine.ordered_list;
+import java.util.Arrays;
+
 import util.vectorclock.VectorClock;
 
 public class OrderedClock {
@@ -72,14 +74,16 @@ public class OrderedClock {
         //the thread is the lastReleasedThread.
         this.tid = other.tid;
         //decrement the dirty epoch because it is always off by one.
-        this.de = other.de-1;
+        this.de = other.de;
         //pass u too.
         this.u = other.u;
 
     }
     public void forkCopy(OrderedClock other){
         int diff = other.u;
+        // System.out.println("pre forkCopy: this (" + this.toString() + ")" + " other (" + other.toString() + ")");
         updateWithMax(other,diff);
+        // System.out.println("post forkCopy: this (" + this.toString() + ")" + " other (" + other.toString() + ")");
         
     }
     //deep copy called by the thread on itself.
@@ -131,6 +135,8 @@ public class OrderedClock {
         parent[children[tid]] = tempParent;
         // the new child of the thread would be the old-head
         children[tid] = head;
+        if (head != -1)
+        parent[head] = tid;
         //reset head
         head = tid;
     }
@@ -142,8 +148,8 @@ public class OrderedClock {
         int count = diff ;
         int updated = 0;
         //compare the dirty epoch.
-        if(this.get(other.tid)<other.de){
-            this.set(other.tid, other.de);
+        if(this.get(other.tid)<other.de-1){
+            this.set(other.tid, other.de-1);
             updated++;
             //increment u
             u++;
@@ -171,7 +177,7 @@ public class OrderedClock {
 
     }
     public String toString(){
-        return this.VC.toString();
+        return this.VC.toString()+"parent "+Arrays.toString(parent)+"child" + Arrays.toString(children);
     }
 
 

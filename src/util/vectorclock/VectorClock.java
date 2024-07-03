@@ -122,7 +122,7 @@ public class VectorClock implements Comparable<VectorClock> {
 		}
 	}
 
-	public boolean updateMax2(VectorClock vc) {
+	public boolean updateMaxInPlace(VectorClock vc) {
 		if (!(this.dim == vc.getDim())) {
 			throw new IllegalArgumentException("Mismatch in this.dim and argument.dim");
 		}
@@ -172,7 +172,7 @@ public class VectorClock implements Comparable<VectorClock> {
 			if (!(this.dim == vc.getDim())) {
 				throw new IllegalArgumentException("Mismatch in maxVC.dim and vc.dim");
 			}
-			this.updateMax2(vc);
+			this.updateMaxInPlace(vc);
 		}
 	}
 

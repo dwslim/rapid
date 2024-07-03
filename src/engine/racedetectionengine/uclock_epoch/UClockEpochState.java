@@ -29,8 +29,8 @@ public class UClockEpochState extends State {
 	public ArrayList<SemiAdaptiveVC> writeVariable;
 
 	// For minjian's sampling algorithm
-	public ArrayList<VectorClock> threadAugmentedVCs;
-	public ArrayList<VectorClock> lockAugmentedVCs;
+	public ArrayList<VectorClock> threadUVCs;
+	public ArrayList<VectorClock> lockUVCs;
 	public ArrayList<Integer> lockLastReleasedThreadIndices;
 	public ArrayList<Integer> localEpoch;
 
@@ -85,8 +85,8 @@ public class UClockEpochState extends State {
 		initialize1DArrayOfVectorClocksWithBottom(this.threadVCs, this.numThreads);
 
 		// initialize HBThreadAugmented
-		this.threadAugmentedVCs = new ArrayList<VectorClock>();
-		initialize1DArrayOfVectorClocksWithBottom(this.threadAugmentedVCs, this.numThreads);
+		this.threadUVCs = new ArrayList<VectorClock>();
+		initialize1DArrayOfVectorClocksWithBottom(this.threadUVCs, this.numThreads);
 
 		this.localEpoch = new ArrayList<Integer>();
 		this.threadsSampledStatus = new ArrayList<>();
@@ -97,7 +97,7 @@ public class UClockEpochState extends State {
 
 		// initialize lastReleaseLock
 		this.lockVCs = new ArrayList<VectorClock>();
-		this.lockAugmentedVCs = new ArrayList<VectorClock>();
+		this.lockUVCs = new ArrayList<VectorClock>();
 		this.lockLastReleasedThreadIndices = new ArrayList<>();
 
 		// initialize readVariable
@@ -123,7 +123,7 @@ public class UClockEpochState extends State {
 			this.numLocks ++;
 
 			lockVCs.add(new VectorClock(this.numThreads));
-			lockAugmentedVCs.add(new VectorClock(this.numThreads));
+			lockUVCs.add(new VectorClock(this.numThreads));
 
 			lockLastReleasedThreadIndices.add(0);
 		}
@@ -154,15 +154,15 @@ public class UClockEpochState extends State {
 		int tIndex = threadToIndex.get(t);
 		int origVal = this.localEpoch.get(tIndex);
 		this.threadVCs.get(tIndex).setClockIndex(tIndex, (Integer)(origVal));
-		incThreadAugmentedEpoch(t);
-		this.localEpoch.set(tIndex,(Integer)(origVal));
+		incThreadUEpoch(t);
+		this.localEpoch.set(tIndex,(Integer)(origVal+1));
 
 	}
 
-	public void incThreadAugmentedEpoch(Thread t) {
+	public void incThreadUEpoch(Thread t) {
 		int tIndex = threadToIndex.get(t);
-		int origVal = this.threadAugmentedVCs.get(tIndex).getClockIndex(tIndex);
-		this.threadAugmentedVCs.get(tIndex).setClockIndex(tIndex, (Integer)(origVal + 1));
+		int origVal = this.threadUVCs.get(tIndex).getClockIndex(tIndex);
+		this.threadUVCs.get(tIndex).setClockIndex(tIndex, (Integer)(origVal + 1));
 	}
 
 	public VectorClock getVectorClock(ArrayList<VectorClock> arr, Thread t) {
