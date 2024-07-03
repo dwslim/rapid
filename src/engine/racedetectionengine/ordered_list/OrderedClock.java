@@ -38,6 +38,9 @@ public class OrderedClock {
     public int getU(){
         return this.u;
     }
+    public void incU(){
+        this.u++;
+    }
     public int getT(){
         return this.tid;
     }
@@ -45,6 +48,7 @@ public class OrderedClock {
     public int getE(){
         return this.de;
     }
+
 
     //when increment, only change the scalars. Note the change of u doesn't need to be reflected in the augmented vector clock.
 
@@ -86,6 +90,7 @@ public class OrderedClock {
         // System.out.println("post forkCopy: this (" + this.toString() + ")" + " other (" + other.toString() + ")");
         
     }
+
     //deep copy called by the thread on itself.
     private void deepCopy(){
         //copy the vector clock.
@@ -103,7 +108,7 @@ public class OrderedClock {
         //no need to change other scalars.
 
     }
-
+    
 
     // returns value of the VC.
     public int get(int tid){
@@ -147,13 +152,6 @@ public class OrderedClock {
         int otherHead = other.head;
         int count = diff ;
         int updated = 0;
-        //compare the dirty epoch.
-        if(this.get(other.tid)<other.de-1){
-            this.set(other.tid, other.de-1);
-            updated++;
-            //increment u
-            u++;
-        }
         //while not the end of list and count is not 0
         while(otherHead!=-1 && count!=0){
             //if current thread, go to next node.

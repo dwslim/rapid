@@ -86,17 +86,31 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 
         VectorClock U_t = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
 
-        //if released by this thread
-        if (O_l.getT()==O_t.getT()){
+        //if released by this thread or fresh lock, do nothing
+        if (O_l.getT()==O_t.getT()||O_l.getU()==-1){
             return false;
         }
+        //check dirty epoch
+        state.acqTraversed++;
+        boolean sharedbefore = O_t.getShared();
+
+        if(O_l.getE()-1>O_t.get(O_l.getT())){
+            state.acqUpdated++;
+            O_t.set(O_l.getT(), O_l.getE()-1);
+            O_t.incU();
+        }
          // Skip if the thread knows more information than the lock. init u of O_l is -1, and init u of U_t is 0.
+
         int diff = O_l.getU()-U_t.getClockIndex(O_l.getT());
-        if (diff<=0)
+        if (diff<=0){
+            if(sharedbefore&&!O_t.getShared()){
+                state.deepcopies++;
+            }
             return false;
+
+        }
         state.acqTraversed+=diff;
         // update the U vector clock.
-        boolean sharedbefore = O_t.getShared();
         U_t.setClockIndex(O_l.getT(),O_l.getU());
         //learn from the lock.
         state.acqUpdated+=O_t.updateWithMax(O_l,diff);
@@ -204,6 +218,9 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 			}
 			OrderedClock O_tp = state.getOrderedClock(state.threadVCs, this.getThread());
 			OrderedClock O_tc = state.getOrderedClock(state.threadVCs, this.getTarget());
+
+            O_tc.set(O_tp.getT(), O_tp.getE()-1);
+            O_tc.incU();
 		    O_tc.forkCopy(O_tp);
             
 
@@ -227,10 +244,18 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 			OrderedClock O_tp = state.getOrderedClock(state.threadVCs, this.getThread());
 			OrderedClock O_tc = state.getOrderedClock(state.threadVCs, this.getTarget());
             VectorClock U_t = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
+            boolean sharedbefore = O_tp.getShared();
 
             int diff = O_tc.getU()-U_t.getClockIndex(O_tc.getT());
+            if(O_tc.getE()-1>O_tp.get(O_tc.getT())){
+                O_tp.set(O_tc.getT(), O_tc.getE()-1);
+                O_tp.incU();
+            }
+            if(diff>0)
 		    O_tp.updateWithMax(O_tc, diff);
-            
+            if(sharedbefore&&!O_tp.getShared()){
+                state.deepcopies++;
+            }
 			this.printRaceInfo(state, verbosity);
 		}
         return false;

@@ -27,6 +27,7 @@ public class OrderedListState extends State{
     public int forks;
     public int acqTraversed;
     public int acqUpdated;
+    public int increments;
     public int deepcopies;
     // Data used for algorithm
     public ArrayList<OrderedClock> threadVCs;
@@ -59,6 +60,7 @@ public class OrderedListState extends State{
         this.acqTraversed=0;
         this.acqUpdated=0; 
         this.deepcopies=0;
+        this.increments=0;
     }
 
     public void initData(HashSet<Thread> tSet) {
@@ -141,6 +143,7 @@ public class OrderedListState extends State{
     public void incThreadEpoch(Thread t) {
         int tIndex = threadToIndex.get(t);
         this.threadVCs.get(tIndex).inc();
+        this.increments++;
     }
 
 
