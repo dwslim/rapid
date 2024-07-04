@@ -54,8 +54,6 @@ public class OrderedClock {
 
     public void inc(){
         this.de++;
-        this.u++;
-
     }
 
     public VectorClock getVC(){

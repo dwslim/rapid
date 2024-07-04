@@ -91,7 +91,7 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
             return false;
         }
         //check dirty epoch
-        state.acqTraversed++;
+        // state.acqTraversed++;
         boolean sharedbefore = O_t.getShared();
 
         if(O_l.getE()-1>O_t.get(O_l.getT())){
