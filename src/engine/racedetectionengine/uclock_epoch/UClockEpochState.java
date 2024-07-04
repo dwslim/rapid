@@ -50,6 +50,8 @@ public class UClockEpochState extends State {
 	public int lockCUpdated;
 	public int increments;
 	public int forks;
+	public int sameThreadAcquireSkipped;
+	public int uAcquireSkipped;
 	public UClockEpochState(HashSet<Thread> tSet) {
 		initInternalData(tSet);
 		initData(tSet);
@@ -77,6 +79,8 @@ public class UClockEpochState extends State {
 		this.numUClockReleases = 0;
 		this.numOriginalJoins = 0;
 		this.numUClockJoins = 0;
+		this.sameThreadAcquireSkipped=0;
+		this.uAcquireSkipped=0;
 	}
 
 	private void initialize1DArrayOfVectorClocksWithBottom(ArrayList<VectorClock> arr, int len) {
@@ -162,6 +166,7 @@ public class UClockEpochState extends State {
 		this.threadVCs.get(tIndex).setClockIndex(tIndex, (Integer)(origVal));
 		incThreadUEpoch(t);
 		this.localEpoch.set(tIndex,(Integer)(origVal+1));
+		this.threadCUpdated++;
 		this.increments++;
 
 	}

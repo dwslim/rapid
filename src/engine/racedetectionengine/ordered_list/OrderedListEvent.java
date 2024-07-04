@@ -88,7 +88,7 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 
         //if released by this thread or fresh lock, do nothing
         if (O_l.getT()==O_t.getT()||O_l.getT()==-1){
-            state.acquireSkipped++;
+            state.sameThreadAcquireSkipped++;
             return false;
         }
         //check dirty epoch
@@ -106,7 +106,7 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
         state.uTraversed++;
         int diff = O_l.getU()-U_t.getClockIndex(O_l.getT());
         if (diff<=0){
-            state.acquireSkipped++;
+            state.uAcquireSkipped++;
             if(sharedbefore&&!O_t.getShared()){
                 state.deepcopies++;
             }
@@ -118,6 +118,9 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 
         }
         state.cTraversed+=Math.min(diff,state.numThreads);
+        if(diff<state.numThreads){
+            state.saveOl +=state.numThreads-diff;
+        }
         // update the U vector clock.
         state.uTraversed++;
         state.uUpdated++;

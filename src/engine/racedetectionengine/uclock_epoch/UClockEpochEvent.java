@@ -92,11 +92,15 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 		
 		int lock_last_released_thread_index = state.getLockLastReleasedThreadIndex(this.getLock());
 		//same thread or fresh lock
-		if(lock_last_released_thread_index==state.getThreadIndex(this.getThread())||lock_last_released_thread_index==-1)
+		if(lock_last_released_thread_index==state.getThreadIndex(this.getThread())||lock_last_released_thread_index==-1){
+			state.sameThreadAcquireSkipped++;
 			return false;
+
+		}
 		// Skip if the thread knows more information than the lock
 		state.uTraversed++;
 		if (U_l.getClockIndex(lock_last_released_thread_index) <= U_t.getClockIndex(lock_last_released_thread_index)){
+			state.uAcquireSkipped++;
 			return false;
 		}
 			
