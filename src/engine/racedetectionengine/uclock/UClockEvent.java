@@ -86,7 +86,9 @@ public class UClockEvent extends RaceDetectionEvent<UClockState> {
 		VectorClock U_l = state.getVectorClock(state.lockAugmentedVCs, this.getLock());
 		VectorClock U_t = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
 		int lock_last_released_thread_index = state.getLockLastReleasedThreadIndex(this.getLock());
-
+		//same thread or fresh lock
+		if(lock_last_released_thread_index==state.getThreadIndex(this.getThread())||lock_last_released_thread_index==-1)
+			return false;
 		// Skip if the thread knows more information than the lock
 		if (U_l.getClockIndex(lock_last_released_thread_index) <= U_t.getClockIndex(lock_last_released_thread_index))
 			return false;
@@ -97,8 +99,8 @@ public class UClockEvent extends RaceDetectionEvent<UClockState> {
 		// Join the vanilla VC because we would loop through to check it anyway.
 		VectorClock C_t = state.getVectorClock(state.threadVCs, this.getThread());
 		VectorClock C_l = state.getVectorClock(state.lockVCs, this.getLock());
-		boolean did_acquire = C_t.updateMaxInPlace(C_l);
-		if (did_acquire) state.incThreadAugmentedEpoch(this.getThread());
+		int a = C_t.updateMaxInPlace(C_l);
+		if (a>0) state.incThreadAugmentedEpoch(this.getThread());
 
 		this.printRaceInfo(state, verbosity);
 		return false;
@@ -247,8 +249,8 @@ public class UClockEvent extends RaceDetectionEvent<UClockState> {
 			VectorClock C_tc = state.getVectorClock(state.threadVCs, this.getTarget());
 
 			// Try to join and see if did actually acquire any new info
-			boolean did_acquire = C_tp.updateMaxInPlace(C_tc);
-			if (did_acquire) state.incThreadAugmentedEpoch(this.getThread());
+			int a = C_tp.updateMaxInPlace(C_tc);
+			if (a>0) state.incThreadAugmentedEpoch(this.getThread());
 
 			this.printRaceInfo(state, verbosity);
 		}

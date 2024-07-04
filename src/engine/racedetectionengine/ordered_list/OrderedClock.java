@@ -33,6 +33,7 @@ public class OrderedClock {
 //for lock, just initate the object. Will perform shallow copy only.
     public OrderedClock(int d){
         this.u = -1;
+        this.tid = -1;
     }
 
     public int getU(){
@@ -81,10 +82,10 @@ public class OrderedClock {
         this.u = other.u;
 
     }
-    public void forkCopy(OrderedClock other){
+    public int forkCopy(OrderedClock other){
         int diff = other.u;
         // System.out.println("pre forkCopy: this (" + this.toString() + ")" + " other (" + other.toString() + ")");
-        updateWithMax(other,diff);
+        return updateWithMax(other,diff);
         // System.out.println("post forkCopy: this (" + this.toString() + ")" + " other (" + other.toString() + ")");
         
     }

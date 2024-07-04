@@ -18,17 +18,20 @@ public class OrderedListState extends State{
     private HashMap<Thread, Integer> threadToIndex;
     private HashMap<Lock, Integer> lockToIndex;
     private HashMap<Variable, Integer> variableToIndex;
-    private int numThreads;
+    public int numThreads;
     private int numLocks;
     private int numVariables;
     public int acquires;
     public int joins;
     public int releases;
     public int forks;
-    public int acqTraversed;
-    public int acqUpdated;
+    public int cTraversed;
+    public int cUpdated;
+    public int uTraversed;
+    public int uUpdated;
     public int increments;
     public int deepcopies;
+    public int acquireSkipped;
     // Data used for algorithm
     public ArrayList<OrderedClock> threadVCs;
     public ArrayList<OrderedClock> lockVCs;
@@ -57,10 +60,13 @@ public class OrderedListState extends State{
         this.numLocks = 0;
         this.variableToIndex = new HashMap<Variable, Integer>();
         this.numVariables = 0;
-        this.acqTraversed=0;
-        this.acqUpdated=0; 
+        this.cTraversed=0;
+        this.cUpdated=0; 
         this.deepcopies=0;
         this.increments=0;
+        this.uTraversed=0;
+        this.uUpdated=0;
+        this.acquireSkipped = 0; 
     }
 
     public void initData(HashSet<Thread> tSet) {
@@ -144,6 +150,8 @@ public class OrderedListState extends State{
         int tIndex = threadToIndex.get(t);
         this.threadVCs.get(tIndex).inc();
         this.increments++;
+        this.cUpdated++;
+        this.cTraversed++;
     }
 
 

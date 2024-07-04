@@ -87,33 +87,50 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
         VectorClock U_t = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
 
         //if released by this thread or fresh lock, do nothing
-        if (O_l.getT()==O_t.getT()||O_l.getU()==-1){
+        if (O_l.getT()==O_t.getT()||O_l.getT()==-1){
+            state.acquireSkipped++;
             return false;
         }
         //check dirty epoch
         // state.acqTraversed++;
         boolean sharedbefore = O_t.getShared();
-
+        boolean epochUpdate=false; 
+        state.cTraversed++;
         if(O_l.getE()-1>O_t.get(O_l.getT())){
-            state.acqUpdated++;
+            state.cUpdated++;
             O_t.set(O_l.getT(), O_l.getE()-1);
             O_t.incU();
+            epochUpdate = true;
         }
          // Skip if the thread knows more information than the lock. init u of O_l is -1, and init u of U_t is 0.
-
+        state.uTraversed++;
         int diff = O_l.getU()-U_t.getClockIndex(O_l.getT());
         if (diff<=0){
+            state.acquireSkipped++;
             if(sharedbefore&&!O_t.getShared()){
                 state.deepcopies++;
+            }
+            if(epochUpdate){
+                state.uUpdated++;
+                state.uTraversed++;
             }
             return false;
 
         }
-        state.acqTraversed+=diff;
+        state.cTraversed+=Math.min(diff,state.numThreads);
         // update the U vector clock.
+        state.uTraversed++;
+        state.uUpdated++;
         U_t.setClockIndex(O_l.getT(),O_l.getU());
         //learn from the lock.
-        state.acqUpdated+=O_t.updateWithMax(O_l,diff);
+        int changedEntry = O_t.updateWithMax(O_l,diff);
+        state.cUpdated+=changedEntry;
+
+        if(changedEntry>0||epochUpdate){
+            state.uTraversed++;
+            state.uUpdated++;
+        }
+
         if(sharedbefore&&!O_t.getShared()){
             state.deepcopies++;
         }
@@ -218,11 +235,19 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 			}
 			OrderedClock O_tp = state.getOrderedClock(state.threadVCs, this.getThread());
 			OrderedClock O_tc = state.getOrderedClock(state.threadVCs, this.getTarget());
-
+            state.cTraversed++;
+            state.cUpdated++;
             O_tc.set(O_tp.getT(), O_tp.getE()-1);
             O_tc.incU();
-		    O_tc.forkCopy(O_tp);
             
+		    int changedEntry=O_tc.forkCopy(O_tp);
+            state.cTraversed += Math.min(O_tp.getU(),state.numThreads);
+            if(changedEntry>0){
+                state.cUpdated+=changedEntry;
+            }
+            state.uUpdated++;
+            state.uTraversed++;
+
 
 
 			this.printRaceInfo(state, verbosity);
@@ -245,16 +270,32 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
 			OrderedClock O_tc = state.getOrderedClock(state.threadVCs, this.getTarget());
             VectorClock U_t = state.getVectorClock(state.threadAugmentedVCs, this.getThread());
             boolean sharedbefore = O_tp.getShared();
-
+            state.uTraversed++;
             int diff = O_tc.getU()-U_t.getClockIndex(O_tc.getT());
+            boolean updateU = false;
+            state.cTraversed++;
             if(O_tc.getE()-1>O_tp.get(O_tc.getT())){
+                state.cUpdated++;
                 O_tp.set(O_tc.getT(), O_tc.getE()-1);
                 O_tp.incU();
+                updateU = true;
             }
-            if(diff>0)
-		    O_tp.updateWithMax(O_tc, diff);
+            if(diff>0){
+               int changedEntry=O_tp.updateWithMax(O_tc, diff);
+               state.cTraversed+=Math.min(diff,state.numThreads);
+               if(changedEntry>0){
+                state.cUpdated+=changedEntry;
+                updateU = true;
+               }
+
+            }
             if(sharedbefore&&!O_tp.getShared()){
                 state.deepcopies++;
+            }
+            if(updateU){
+                state.uUpdated++;
+                state.uTraversed++;
+
             }
 			this.printRaceInfo(state, verbosity);
 		}

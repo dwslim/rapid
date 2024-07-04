@@ -17,8 +17,18 @@ public class OrderedList {
 		System.out.println("Num releases: " + engine.state.releases);
 		System.out.println("Num joins: " + engine.state.joins);
 		System.out.println("Num forks: " + engine.state.forks);
-		System.out.println("Num acq traversed: " + engine.state.acqTraversed);
-		System.out.println("Num acq updated: " + engine.state.acqUpdated);
+		System.out.println("Num threads: " + engine.state.numThreads);
+
+		System.out.println("Num C traversed: " + engine.state.cTraversed);
+		System.out.println("Num C updated: " + engine.state.cUpdated);
+		System.out.println("Num U traversed: " + engine.state.uTraversed);
+		System.out.println("Num U updated: " + engine.state.uUpdated);
+		System.out.println("Num increments: " + engine.state.increments);
+		System.out.println("Num acquire skipped: " + engine.state.acquireSkipped);
+		System.out.println("total work would have done: " + (engine.state.acquires+engine.state.releases+engine.state.joins+engine.state.forks)*engine.state.numThreads+engine.state.releases);
 		System.out.println("Num deep copies: " + engine.state.deepcopies);
+		System.out.println("total work done: "+engine.state.cTraversed+engine.state.uTraversed+(engine.state.deepcopies*engine.state.numThreads) );
+
+
 	}
 }

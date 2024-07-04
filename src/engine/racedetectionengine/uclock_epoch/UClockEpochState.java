@@ -18,7 +18,7 @@ public class UClockEpochState extends State {
 	private HashMap<Thread, Integer> threadToIndex;
 	private HashMap<Lock, Integer> lockToIndex;
 	private HashMap<Variable, Integer> variableToIndex;
-	private int numThreads;
+	public int numThreads;
 	private int numLocks;
 	private int numVariables;
 
@@ -43,7 +43,13 @@ public class UClockEpochState extends State {
 	public int numUClockReleases;
 	public int numOriginalJoins;
 	public int numUClockJoins;
-
+	public int uTraversed;
+	public int threadUUpdated;
+	public int threadCUpdated;
+	public int lockUUpdated;
+	public int lockCUpdated;
+	public int increments;
+	public int forks;
 	public UClockEpochState(HashSet<Thread> tSet) {
 		initInternalData(tSet);
 		initData(tSet);
@@ -156,6 +162,7 @@ public class UClockEpochState extends State {
 		this.threadVCs.get(tIndex).setClockIndex(tIndex, (Integer)(origVal));
 		incThreadUEpoch(t);
 		this.localEpoch.set(tIndex,(Integer)(origVal+1));
+		this.increments++;
 
 	}
 
@@ -163,6 +170,8 @@ public class UClockEpochState extends State {
 		int tIndex = threadToIndex.get(t);
 		int origVal = this.threadUVCs.get(tIndex).getClockIndex(tIndex);
 		this.threadUVCs.get(tIndex).setClockIndex(tIndex, (Integer)(origVal + 1));
+		this.uTraversed++;
+		threadUUpdated++;
 	}
 
 	public VectorClock getVectorClock(ArrayList<VectorClock> arr, Thread t) {
