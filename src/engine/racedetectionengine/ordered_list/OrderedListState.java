@@ -156,6 +156,8 @@ public class OrderedListState extends State{
         this.increments++;
         this.cUpdated++;
         this.cTraversed++;
+        this.uUpdated++;
+        this.uTraversed++;
     }
 
 
