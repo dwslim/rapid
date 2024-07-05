@@ -29,9 +29,9 @@ public class OrderedList {
 
 		System.out.println("processed acquires " + engine.state.sameThreadAcquireSkipped);
 		
-		System.out.println("total work would have done: " + (((engine.state.acquires+engine.state.releases+engine.state.joins+engine.state.forks-engine.state.sameThreadAcquireSkipped)*engine.state.numThreads)+engine.state.releases));
+		System.out.println("total work would have done: " + (((long)(engine.state.acquires+engine.state.releases+engine.state.joins+engine.state.forks-engine.state.sameThreadAcquireSkipped)*engine.state.numThreads)+engine.state.releases));
 		System.out.println("Num deep copies: " + engine.state.deepcopies);
-		System.out.println("total work done: "+(engine.state.cTraversed+engine.state.uTraversed+(engine.state.deepcopies*engine.state.numThreads)) );
+		System.out.println("total work done: "+(engine.state.cTraversed+engine.state.uTraversed+((long)(engine.state.deepcopies)*engine.state.numThreads)) );
 		System.out.println("saving from ordered list " + engine.state.saveOl);
 
 	}

@@ -24,8 +24,8 @@ public class UClockEpoch {
 		System.out.println("Num thread C updated: " + engine.state.threadCUpdated);
 		System.out.println("Num thread U updated: " + engine.state.threadUUpdated);
 		System.out.println("Num thread U traversed: " + engine.state.uTraversed);
-		System.out.println("total work would have done: " + (((engine.state.numOriginalAcquires+engine.state.numOriginalReleases+engine.state.numOriginalJoins+engine.state.forks-engine.state.sameThreadAcquireSkipped)*engine.state.numThreads)+engine.state.numOriginalReleases));
-		System.out.println("total work  done: " + engine.state.uTraversed +engine.state.increments+(engine.state.numUClockAcquires+engine.state.numUClockReleases+engine.state.numUClockJoins+engine.state.forks)*2*engine.state.numThreads);
+		System.out.println("total work would have done: " + (((long)(engine.state.numOriginalAcquires+engine.state.numOriginalReleases+engine.state.numOriginalJoins+engine.state.forks-engine.state.sameThreadAcquireSkipped)*engine.state.numThreads)+engine.state.numOriginalReleases));
+		System.out.println("total work  done: " + engine.state.uTraversed +engine.state.increments+(long)(engine.state.numUClockAcquires+engine.state.numUClockReleases+engine.state.numUClockJoins+engine.state.forks)*2*engine.state.numThreads);
 
 
 	}
