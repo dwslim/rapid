@@ -21,19 +21,19 @@ public class OrderedListState extends State{
     public int numThreads;
     private int numLocks;
     private int numVariables;
-    public int acquires;
-    public int joins;
-    public int releases;
-    public int forks;
-    public int cTraversed;
-    public int cUpdated;
-    public int uTraversed;
-    public int uUpdated;
-    public int increments;
-    public int deepcopies;
-    public int uAcquireSkipped;
-    public int sameThreadAcquireSkipped;
-    public int saveOl;
+    public long acquires;
+    public long joins;
+    public long releases;
+    public long forks;
+    public long cTraversed;
+    public long cUpdated;
+    public long uTraversed;
+    public long uUpdated;
+    public long increments;
+    public long deepcopies;
+    public long uAcquireSkipped;
+    public long sameThreadAcquireSkipped;
+    public long saveOl;
     // Data used for algorithm
     public ArrayList<OrderedClock> threadVCs;
     public ArrayList<OrderedClock> lockVCs;
@@ -216,8 +216,8 @@ public class OrderedListState extends State{
     }
 
     public void printMemory(){
-        System.err.println("Number of threads = " + Integer.toString(this.numThreads));
-        System.err.println("Number of locks = " + Integer.toString(this.numLocks));
-        System.err.println("Number of variables = " + Integer.toString(this.numVariables));
+        System.err.println("Number of threads = " + Long.toString(this.numThreads));
+        System.err.println("Number of locks = " + Long.toString(this.numLocks));
+        System.err.println("Number of variables = " + Long.toString(this.numVariables));
     }
 }
