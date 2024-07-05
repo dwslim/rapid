@@ -179,6 +179,14 @@ public class UClockEpochState extends State {
 		threadUUpdated++;
 	}
 
+	public void incThreadUEpochByVal(Thread t, int val){
+		int tIndex = threadToIndex.get(t);
+		int origVal = this.threadUVCs.get(tIndex).getClockIndex(tIndex);
+		this.threadUVCs.get(tIndex).setClockIndex(tIndex, (Integer)(origVal + val));
+		this.uTraversed++;
+		threadUUpdated++;
+	}
+
 	public VectorClock getVectorClock(ArrayList<VectorClock> arr, Thread t) {
 		int tIndex = threadToIndex.get(t);
 		return getVectorClockFrom1DArray(arr, tIndex);
