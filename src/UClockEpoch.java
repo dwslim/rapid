@@ -10,7 +10,7 @@ public class UClockEpoch {
 
 	public static void main(String[] args) {
 		CmdOptions options = new GetOptions(args).parse();
-		UClockEpochEngine engine = new UClockEpochEngine(options.parserType, options.path, options.samplingRate);
+		UClockEpochEngine engine = new UClockEpochEngine(options.parserType, options.path, options.samplingRate, options.samplingRNGSeed);
 		engine.analyzeTrace(options.multipleRace, options.verbosity);
 		System.out.println("Time for analysis = " + engine.analysisTotalDuration + " milliseconds");
 		System.out.println("Num original acquires: " + engine.state.numOriginalAcquires);
@@ -25,7 +25,7 @@ public class UClockEpoch {
 		System.out.println("Num thread U updated: " + engine.state.threadUUpdated);
 		System.out.println("Num thread U traversed: " + engine.state.uTraversed);
 		System.out.println("total work would have done: " + (((engine.state.numOriginalAcquires+engine.state.numOriginalReleases+engine.state.numOriginalJoins+engine.state.forks-engine.state.sameThreadAcquireSkipped)*engine.state.numThreads)+engine.state.numOriginalReleases));
-		System.out.println("total work  done: " + engine.state.uTraversed +engine.state.increments+(engine.state.numUClockAcquires+engine.state.numUClockReleases+engine.state.numUClockJoins+engine.state.forks)*2*engine.state.numThreads);
+		System.out.println("total work  done: " + (engine.state.uTraversed +engine.state.increments+(engine.state.numUClockAcquires+engine.state.numUClockReleases+engine.state.numUClockJoins+engine.state.forks)*2*engine.state.numThreads));
 
 
 	}

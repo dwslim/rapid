@@ -12,14 +12,14 @@ public class HBEpochEngine extends RaceDetectionEngine<HBEpochState, HBEpochEven
 	private Random rng;
 	private double samplingRate;
 
-	public HBEpochEngine(ParserType pType, String trace_folder, double samplingRate) {
+	public HBEpochEngine(ParserType pType, String trace_folder, double samplingRate, int samplingRNGSeed) {
 		super(pType);
 		this.threadSet = new HashSet<Thread> ();
 		initializeReader(trace_folder);
 		this.state = new HBEpochState(this.threadSet);
 		handlerEvent = new HBEpochEvent();
 
-		this.rng = new Random();
+		this.rng = new Random(samplingRNGSeed);
 		this.samplingRate = samplingRate;
 	}
 

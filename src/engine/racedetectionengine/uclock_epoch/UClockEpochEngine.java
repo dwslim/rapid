@@ -12,14 +12,14 @@ public class UClockEpochEngine extends RaceDetectionEngine<UClockEpochState, UCl
 	private Random rng;
 	private double samplingRate;
 
-	public UClockEpochEngine(ParserType pType, String trace_folder, double samplingRate) {
+	public UClockEpochEngine(ParserType pType, String trace_folder, double samplingRate, int samplingRNGSeed) {
 		super(pType);
 		this.threadSet = new HashSet<Thread> ();
 		initializeReader(trace_folder);
 		this.state = new UClockEpochState(this.threadSet);
 		handlerEvent = new UClockEpochEvent();
 
-		this.rng = new Random();
+		this.rng = new Random(samplingRNGSeed);
 		this.samplingRate = samplingRate;
 	}
 

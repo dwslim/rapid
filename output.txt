@@ -1,0 +1,407 @@
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/boundedbuffer.std OrderedList 1.0
+Number of 'racy' events found = 3
+Number of 'racy' lines found = 1
+Time for analysis = 2 milliseconds
+Num acquires: 0
+Num releases: 0
+Num joins: 0
+Num forks: 2
+Num acq traversed: 0
+Num acq updated: 0
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/critical.std OrderedList 1.0
+Number of 'racy' events found = 2
+Number of 'racy' lines found = 2
+Time for analysis = 2 milliseconds
+Num acquires: 0
+Num releases: 0
+Num joins: 2
+Num forks: 3
+Num acq traversed: 0
+Num acq updated: 0
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/array.std OrderedList 1.0
+Number of 'racy' events found = 0
+Number of 'racy' lines found = 0
+Time for analysis = 1 milliseconds
+Num acquires: 2
+Num releases: 2
+Num joins: 0
+Num forks: 2
+Num acq traversed: 2
+Num acq updated: 1
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/pingpong.std OrderedList 1.0
+Number of 'racy' events found = 10
+Number of 'racy' lines found = 2
+Time for analysis = 4 milliseconds
+Num acquires: 0
+Num releases: 0
+Num joins: 0
+Num forks: 6
+Num acq traversed: 0
+Num acq updated: 0
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/producerconsumer.std OrderedList 1.0
+Number of 'racy' events found = 3
+Number of 'racy' lines found = 1
+Time for analysis = 92 milliseconds
+Num acquires: 34
+Num releases: 34
+Num joins: 5
+Num forks: 7
+Num acq traversed: 148
+Num acq updated: 52
+Num deep copies: 23
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/account.std OrderedList 1.0
+Number of 'racy' events found = 6
+Number of 'racy' lines found = 1
+Time for analysis = 97 milliseconds
+Num acquires: 0
+Num releases: 0
+Num joins: 1
+Num forks: 3
+Num acq traversed: 0
+Num acq updated: 0
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/airlinetickets.std OrderedList 1.0
+Number of 'racy' events found = 5
+Number of 'racy' lines found = 2
+Time for analysis = 2 milliseconds
+Num acquires: 0
+Num releases: 0
+Num joins: 0
+Num forks: 4
+Num acq traversed: 0
+Num acq updated: 0
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/twostage.std OrderedList 1.0
+Number of 'racy' events found = 4
+Number of 'racy' lines found = 1
+Time for analysis = 5 milliseconds
+Num acquires: 20
+Num releases: 20
+Num joins: 0
+Num forks: 11
+Num acq traversed: 99
+Num acq updated: 90
+Num deep copies: 9
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/mergesort.std OrderedList 1.0
+Number of 'racy' events found = 4
+Number of 'racy' lines found = 3
+Time for analysis = 194 milliseconds
+Num acquires: 49
+Num releases: 49
+Num joins: 3
+Num forks: 4
+Num acq traversed: 41
+Num acq updated: 4
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/wronglock.std OrderedList 1.0
+Number of 'racy' events found = 7
+Number of 'racy' lines found = 3
+Time for analysis = 103 milliseconds
+Num acquires: 20
+Num releases: 20
+Num joins: 0
+Num forks: 21
+Num acq traversed: 108
+Num acq updated: 90
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/batik.std OrderedList 1.0
+Number of 'racy' events found = 105
+Number of 'racy' lines found = 9
+Time for analysis = 104 milliseconds
+Num acquires: 0
+Num releases: 0
+Num joins: 0
+Num forks: 6
+Num acq traversed: 0
+Num acq updated: 0
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/clean.std OrderedList 1.0
+Number of 'racy' events found = 32
+Number of 'racy' lines found = 4
+Time for analysis = 485 milliseconds
+Num acquires: 239
+Num releases: 239
+Num joins: 0
+Num forks: 7
+Num acq traversed: 1117
+Num acq updated: 360
+Num deep copies: 195
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/raytracer.std OrderedList 1.0
+Number of 'racy' events found = 116
+Number of 'racy' lines found = 4
+Time for analysis = 492 milliseconds
+Num acquires: 0
+Num releases: 0
+Num joins: 1
+Num forks: 2
+Num acq traversed: 0
+Num acq updated: 0
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/misc/biojava/biojava_filter.std OrderedList 1.0
+Number of 'racy' events found = 2
+Number of 'racy' lines found = 2
+Time for analysis = 11 milliseconds
+Num acquires: 383
+Num releases: 383
+Num joins: 0
+Num forks: 3
+Num acq traversed: 41
+Num acq updated: 3
+Num deep copies: 2
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/bubblesort.std OrderedList 1.0
+Number of 'racy' events found = 404
+Number of 'racy' lines found = 4
+Time for analysis = 990 milliseconds
+Num acquires: 119
+Num releases: 119
+Num joins: 0
+Num forks: 12
+Num acq traversed: 178
+Num acq updated: 55
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/jigsaw.std OrderedList 1.0
+Number of 'racy' events found = 5
+Number of 'racy' lines found = 5
+Time for analysis = 599 milliseconds
+Num acquires: 1062
+Num releases: 1062
+Num joins: 1
+Num forks: 7
+Num acq traversed: 621
+Num acq updated: 79
+Num deep copies: 53
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/sunflow.std OrderedList 1.0
+Number of 'racy' events found = 116
+Number of 'racy' lines found = 7
+Time for analysis = 782 milliseconds
+Num acquires: 585
+Num releases: 585
+Num joins: 12
+Num forks: 16
+Num acq traversed: 11806
+Num acq updated: 1677
+Num deep copies: 219
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/lang.std OrderedList 1.0
+Number of 'racy' events found = 800
+Number of 'racy' lines found = 2
+Time for analysis = 1002 milliseconds
+Num acquires: 0
+Num releases: 0
+Num joins: 5
+Num forks: 6
+Num acq traversed: 0
+Num acq updated: 0
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/bufwriter.std OrderedList 1.0
+Number of 'racy' events found = 8
+Number of 'racy' lines found = 4
+Time for analysis = 310 milliseconds
+Num acquires: 1374
+Num releases: 1374
+Num joins: 4
+Num forks: 5
+Num acq traversed: 2728
+Num acq updated: 352
+Num deep copies: 342
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/readerswriters.std OrderedList 1.0
+Number of 'racy' events found = 166
+Number of 'racy' lines found = 6
+Time for analysis = 1072 milliseconds
+Num acquires: 1729
+Num releases: 1729
+Num joins: 0
+Num forks: 4
+Num acq traversed: 9432
+Num acq updated: 2202
+Num deep copies: 1455
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/luindex.std OrderedList 1.0
+Number of 'racy' events found = 1
+Number of 'racy' lines found = 1
+Time for analysis = 307 milliseconds
+Num acquires: 6628
+Num releases: 6628
+Num joins: 0
+Num forks: 2
+Num acq traversed: 1287
+Num acq updated: 3
+Num deep copies: 3
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/ftpserver.std OrderedList 1.0
+Number of 'racy' events found = 125
+Number of 'racy' lines found = 25
+Time for analysis = 508 milliseconds
+Num acquires: 4259
+Num releases: 4259
+Num joins: 4
+Num forks: 10
+Num acq traversed: 16132
+Num acq updated: 854
+Num deep copies: 613
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/derby.std OrderedList 1.0
+Number of 'racy' events found = 50
+Number of 'racy' lines found = 16
+Time for analysis = 681 milliseconds
+Num acquires: 21610
+Num releases: 21610
+Num joins: 2
+Num forks: 3
+Num acq traversed: 16459
+Num acq updated: 1014
+Num deep copies: 1011
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/moldyn.std OrderedList 1.0
+Number of 'racy' events found = 20516
+Number of 'racy' lines found = 3
+Time for analysis = 2682 milliseconds
+Num acquires: 0
+Num releases: 0
+Num joins: 1
+Num forks: 2
+Num acq traversed: 0
+Num acq updated: 0
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/misc/tradebeans/tradebeans_filter.std OrderedList 1.0
+Number of 'racy' events found = 6664
+Number of 'racy' lines found = 33
+Time for analysis = 2374 milliseconds
+Num acquires: 58338
+Num releases: 58338
+Num joins: 0
+Num forks: 218
+Num acq traversed: 257693
+Num acq updated: 21440
+Num deep copies: 1061
+=== /home/users/nus/dws.lim/scratch/traces/misc/tradesoap/tradesoap_filter.std OrderedList 1.0
+Number of 'racy' events found = 6849
+Number of 'racy' lines found = 33
+Time for analysis = 2036 milliseconds
+Num acquires: 58266
+Num releases: 58266
+Num joins: 0
+Num forks: 217
+Num acq traversed: 253239
+Num acq updated: 21676
+Num deep copies: 1062
+=== /home/users/nus/dws.lim/scratch/traces/misc/graphchi/graphchi_filter.std OrderedList 1.0
+Number of 'racy' events found = 85046
+Number of 'racy' lines found = 4
+Time for analysis = 3203 milliseconds
+Num acquires: 344
+Num releases: 344
+Num joins: 0
+Num forks: 17
+Num acq traversed: 11432
+Num acq updated: 2216
+Num deep copies: 278
+=== /home/users/nus/dws.lim/scratch/traces/misc/hsqldb/hsqldb_filter.std OrderedList 1.0
+Number of 'racy' events found = 353
+Number of 'racy' lines found = 353
+Time for analysis = 480 milliseconds
+Num acquires: 167362
+Num releases: 167362
+Num joins: 41
+Num forks: 43
+Num acq traversed: 1551025
+Num acq updated: 3423
+Num deep copies: 1031
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/xalan.std OrderedList 1.0
+Number of 'racy' events found = 50
+Number of 'racy' lines found = 11
+Time for analysis = 414 milliseconds
+Num acquires: 183940
+Num releases: 183940
+Num joins: 5
+Num forks: 6
+Num acq traversed: 505399
+Num acq updated: 28830
+Num deep copies: 22220
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/linkedlist.std OrderedList 1.0
+Number of 'racy' events found = 28791
+Number of 'racy' lines found = 4
+Time for analysis = 1159 milliseconds
+Num acquires: 1000
+Num releases: 1000
+Num joins: 10
+Num forks: 11
+Num acq traversed: 21111
+Num acq updated: 2385
+Num deep copies: 940
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/lusearch.std OrderedList 1.0
+Number of 'racy' events found = 406200
+Number of 'racy' lines found = 42
+Time for analysis = 4205 milliseconds
+Num acquires: 53
+Num releases: 53
+Num joins: 0
+Num forks: 7
+Num acq traversed: 337
+Num acq updated: 78
+Num deep copies: 29
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/cryptorsa.std OrderedList 1.0
+Number of 'racy' events found = 93
+Number of 'racy' lines found = 5
+Time for analysis = 306 milliseconds
+Num acquires: 156356
+Num releases: 156356
+Num joins: 5
+Num forks: 6
+Num acq traversed: 740095
+Num acq updated: 86151
+Num deep copies: 55781
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/sor.std OrderedList 1.0
+Number of 'racy' events found = 0
+Number of 'racy' lines found = 0
+Time for analysis = 457 milliseconds
+Num acquires: 633547
+Num releases: 633547
+Num joins: 3
+Num forks: 4
+Num acq traversed: 3677647
+Num acq updated: 595249
+Num deep copies: 468546
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/lufact.std OrderedList 1.0
+Number of 'racy' events found = 864413
+Number of 'racy' lines found = 3
+Time for analysis = 6071 milliseconds
+Num acquires: 0
+Num releases: 0
+Num joins: 3
+Num forks: 4
+Num acq traversed: 0
+Num acq updated: 0
+Num deep copies: 0
+=== /home/users/nus/dws.lim/scratch/traces/misc/zxing/zxing_filter.std OrderedList 1.0
+Number of 'racy' events found = 3545911
+Number of 'racy' lines found = 54
+Time for analysis = 18996 milliseconds
+Num acquires: 3624
+Num releases: 3624
+Num joins: 0
+Num forks: 14
+Num acq traversed: 71091
+Num acq updated: 5932
+Num deep copies: 1158
+=== /home/users/nus/dws.lim/scratch/traces/misc/cassandra/cassandra_filter.std OrderedList 1.0
+Number of 'racy' events found = 28059
+Number of 'racy' lines found = 59
+Time for analysis = 8551 milliseconds
+Num acquires: 12246313
+Num releases: 12246313
+Num joins: 17
+Num forks: 131
+Num acq traversed: 71337716
+Num acq updated: 1996317
+Num deep copies: 1538872
+=== /home/users/nus/dws.lim/scratch/traces/STD-Format/tsp.std OrderedList 1.0
+Number of 'racy' events found = 10370955
+Number of 'racy' lines found = 7
+Time for analysis = 43226 milliseconds
+Num acquires: 91
+Num releases: 90
+Num joins: 0
+Num forks: 9
+Num acq traversed: 1214
+Num acq updated: 320
+Num deep copies: 59

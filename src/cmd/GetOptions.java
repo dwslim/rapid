@@ -27,6 +27,7 @@ public class GetOptions {
 		options.addOption("v", "verbosity", true, "for setting verbosity: Allowed levels = 0, 1, 2 (Default : 0)");
         options.addOption("m", "excluded-methods", true, "path to file that lists methods to be excluded");
         options.addOption("r", "sampling-rate", true, "sampling rate between 0 and 1 (e.g 0.03 for 3%)");
+        options.addOption("S", "sampling-rng-seed", true, "seed for the sampling RNG");
 	}
 
 	public CmdOptions parse() {
