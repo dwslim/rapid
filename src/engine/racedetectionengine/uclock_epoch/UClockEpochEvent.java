@@ -153,8 +153,8 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 			state.lockUUpdated+=U_l.updateMaxInPlace(U_t);
 
 			// Record the lock's last released thread.
-			state.updateLockLastReleasedThreadIndex(this.getLock(), this.getThread());
 		}
+		state.updateLockLastReleasedThreadIndex(this.getLock(), this.getThread());
 
 		this.printRaceInfo(state, verbosity);
 		return false;
