@@ -135,7 +135,7 @@ public class UClockEpochState extends State {
 			lockVCs.add(new VectorClock(this.numThreads));
 			lockUVCs.add(new VectorClock(this.numThreads));
 
-			lockLastReleasedThreadIndices.add(0);
+			lockLastReleasedThreadIndices.add(-1);
 		}
 		return lockToIndex.get(l);
 	}
