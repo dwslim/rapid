@@ -155,9 +155,7 @@ public class OrderedListState extends State{
         this.threadVCs.get(tIndex).inc();
         this.increments++;
         this.cUpdated++;
-        this.cTraversed++;
         this.uUpdated++;
-        this.uTraversed++;
     }
 
 

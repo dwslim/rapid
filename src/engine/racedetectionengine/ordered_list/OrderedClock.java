@@ -14,6 +14,7 @@ public class OrderedClock {
     private int tid;
     private int u;
     private boolean shared;
+
 //for threads, -1 means no parent or no child. At the beginning, all threads have no parent and no child.
     public OrderedClock(int d, int tid){
         this.VC = new VectorClock(d);
@@ -83,7 +84,7 @@ public class OrderedClock {
         this.u = other.u;
 
     }
-    public int forkCopy(OrderedClock other){
+    public int[] forkCopy(OrderedClock other){
         int diff = other.u;
         // System.out.println("pre forkCopy: this (" + this.toString() + ")" + " other (" + other.toString() + ")");
         return updateWithMax(other,diff);
@@ -147,16 +148,16 @@ public class OrderedClock {
     }
     //join function on two ordered lists.
 
-    public int updateWithMax(OrderedClock other, int diff){
+    public int[] updateWithMax(OrderedClock other, int diff){
 
         int otherHead = other.head;
-        int count = diff ;
+        int count = 0 ;
         int updated = 0;
         //while not the end of list and count is not 0
-        while(otherHead!=-1 && count!=0){
+        while(otherHead!=-1 && count!=diff){
             //if current thread, go to next node.
             if(otherHead==tid||otherHead==other.tid){
-                count = count-1;
+                count = count+1;
                 otherHead = other.children[otherHead];
                 continue;
             }
@@ -167,10 +168,13 @@ public class OrderedClock {
                 u++;
                 updated++;
             }
-            count = count-1;
+            count = count+1;
             otherHead = other.children[otherHead];
         }
-        return updated;
+        int [] res = new int[2];
+        res[0] = updated;
+        res[1] = count;
+        return res;
 
 
     }

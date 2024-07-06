@@ -81,7 +81,8 @@ public class HBEpochEvent extends RaceDetectionEvent<HBEpochState> {
 	public boolean HandleSubAcquire(HBEpochState state, int verbosity) {
 		VectorClock H_t = state.getVectorClock(state.HBPredecessorThread, this.getThread());
 		VectorClock L_l = state.getVectorClock(state.lastReleaseLock, this.getLock());
-		H_t.updateWithMax(H_t, L_l);
+		state.updated+=H_t.updateMaxInPlace(L_l);
+		state.numMax++;
 		this.printRaceInfo(state, verbosity);
 		return false;
 	}
@@ -90,7 +91,9 @@ public class HBEpochEvent extends RaceDetectionEvent<HBEpochState> {
 	public boolean HandleSubRelease(HBEpochState state, int verbosity) {
 		VectorClock C_t = state.generateVectorClockFromClockThread(this.getThread());
 		VectorClock L_l = state.getVectorClock(state.lastReleaseLock, this.getLock());
-		L_l.copyFrom(C_t);
+		state.updated+=L_l.updateMaxInPlace(C_t);
+		state.numMax++;
+
 		state.incClockThread(getThread());
 		this.printRaceInfo(state, verbosity);
 		return false;
@@ -151,7 +154,9 @@ public class HBEpochEvent extends RaceDetectionEvent<HBEpochState> {
 			VectorClock C_t = state.generateVectorClockFromClockThread(this.getThread());
 			VectorClock H_tc = state.getVectorClock(state.HBPredecessorThread, this.getTarget());
 			// System.out.println("Fork : Setting HB of target");
-			H_tc.copyFrom(C_t);
+			state.updated+=H_tc.updateMaxInPlace(C_t);
+			state.numMax++;
+
 			state.incClockThread(this.getThread());
 			this.printRaceInfo(state, verbosity);
 		}
@@ -163,7 +168,9 @@ public class HBEpochEvent extends RaceDetectionEvent<HBEpochState> {
 		if (state.isThreadRelevant(this.getTarget())) {
 			VectorClock H_t = state.getVectorClock(state.HBPredecessorThread, this.getThread());
 			VectorClock C_tc = state.generateVectorClockFromClockThread(this.getTarget());
-			H_t.updateWithMax(H_t, C_tc);
+			state.updated+=H_t.updateMaxInPlace(C_tc);
+			state.numMax++;
+
 			this.printRaceInfo(state, verbosity);
 		}
 		return false;

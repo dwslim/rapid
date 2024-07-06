@@ -18,10 +18,11 @@ public class HBEpochState extends State {
 	private HashMap<Thread, Integer> threadToIndex;
 	private HashMap<Lock, Integer> lockToIndex;
 	private HashMap<Variable, Integer> variableToIndex;
-	private int numThreads;
+	public int numThreads;
 	private int numLocks;
 	private int numVariables;
-
+	public int updated;
+	public int numMax;
 	// Data used for algorithm
 	private ArrayList<Integer> clockThread;
 	public ArrayList<VectorClock> HBPredecessorThread;
@@ -49,6 +50,8 @@ public class HBEpochState extends State {
 		this.numLocks = 0;
 		this.variableToIndex = new HashMap<Variable, Integer>();
 		this.numVariables = 0;
+		this.updated =0;
+		this.numMax=0;
 	}
 
 	private void initialize1DArrayOfVectorClocksWithBottom(ArrayList<VectorClock> arr, int len) {
@@ -127,6 +130,7 @@ public class HBEpochState extends State {
 	public void incClockThread(Thread t) {
 		int tIndex = threadToIndex.get(t);
 		int origVal = clockThread.get(tIndex);
+		updated++;
 		clockThread.set(tIndex, (Integer)(origVal + 1));
 	}
 
