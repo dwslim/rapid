@@ -29,8 +29,11 @@ public class OrderedList {
 		System.out.println("Num entry visited: "+((engine.state.cTraversed+engine.state.uTraversed+engine.state.deepcopies*engine.state.numThreads)));
 		System.out.println("Num entry visited in join operations : "+((engine.state.cTraversed+(engine.state.deepcopies*engine.state.numThreads))));
 		System.out.println("Num entry updated: "+(engine.state.cUpdated+engine.state.uUpdated));
+
 		//System.out.println("total work done: "+(engine.state.cTraversed+engine.state.uTraversed+((long)(engine.state.deepcopies)*engine.state.numThreads)) );
 		System.out.println("ordered list saving" + engine.state.saveOl);
+		System.out.println("Num thread C updated: " + engine.state.cUpdated);
+
 
 	}
 }
