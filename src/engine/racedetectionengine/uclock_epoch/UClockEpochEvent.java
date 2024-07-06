@@ -222,7 +222,7 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 		//     U_tp(tp)++
 		// 	   C_tp(tp)++
 		// 	   smp_tp := 0
-		state.forks++;
+		state.numOriginalForks++;
 		if (state.isThreadRelevant(this.getTarget())) {
 
 			if (state.didThreadSample(this.getThread())) {
@@ -233,7 +233,11 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 			VectorClock C_tc = state.getVectorClock(state.threadVCs, this.getTarget());
 			VectorClock U_tp = state.getVectorClock(state.threadUVCs, this.getThread());
 			VectorClock U_tc = state.getVectorClock(state.threadUVCs, this.getTarget());
-
+			state.uTraversed++;
+			if(U_tp.getClockIndex(state.getThreadIndex(this.getThread()))==0){
+				return false; 
+			}
+			state.numUclockForks++;
 			// Copy parent VC to thread
 			int entryChanged=C_tc.updateMaxInPlace(C_tp);
 			if(entryChanged>0){

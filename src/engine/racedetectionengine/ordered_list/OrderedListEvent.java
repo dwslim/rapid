@@ -93,7 +93,6 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
         }
         //check dirty epoch
         // state.acqTraversed++;
-        boolean sharedbefore = O_t.getShared();
         boolean epochUpdate=false; 
  
          // Skip if the thread knows more information than the lock. init u of O_l is -1, and init u of U_t is 0.
@@ -101,38 +100,35 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
         int diff = O_l.getU()-U_t.getClockIndex(O_l.getT());
         if (diff<=0){
             state.uAcquireSkipped++;
-            if(sharedbefore&&!O_t.getShared()){
-                state.deepcopies++;
-            }
-            if(epochUpdate){
-                state.uUpdated++;
-                state.uTraversed++;
-            }
-            return false;
-
+            return false;      
         }
+        boolean sharedbefore = O_t.getShared();
+        //increment nodes traversed due to checking dirty epoch
         state.cTraversed++;
+
         if(O_l.getE()-1>O_t.get(O_l.getT())){
+            //updated dirty epoch
             state.cUpdated++;
             O_t.set(O_l.getT(), O_l.getE()-1);
             O_t.incU();
             epochUpdate = true;
         }
 
-        state.cTraversed+=Math.min(diff,state.numThreads);
-        if(diff<state.numThreads){
-            state.saveOl +=state.numThreads-diff;
-        }
         // update the U vector clock.
-        state.uTraversed++;
         state.uUpdated++;
         U_t.setClockIndex(O_l.getT(),O_l.getU());
         //learn from the lock.
-        int changedEntry = O_t.updateWithMax(O_l,diff);
+        int[] updateRes = O_t.updateWithMax(O_l,diff);
+        int changedEntry =updateRes[0];
+        //updating num updated nodes
         state.cUpdated+=changedEntry;
-
+        //updating nodes traversed
+        int traversedEntry =updateRes[1];
+        state.cTraversed+=traversedEntry;
+        if(traversedEntry<state.numThreads){
+            state.saveOl +=state.numThreads-diff;
+        }
         if(changedEntry>0||epochUpdate){
-            state.uTraversed++;
             state.uUpdated++;
         }
 
@@ -249,19 +245,19 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
                 state.cUpdated++;
 
             }
-  
-            
-		    int changedEntry=O_tc.forkCopy(O_tp);
-            state.cTraversed += Math.min(O_tp.getU(),state.numThreads);
+            //u traversed for checking if parent has been updated
+            state.uTraversed++;
+            if(O_tp.getU()==0){
+                return false;
+            }
+            int [] updateRes = O_tc.forkCopy(O_tp);
+		    int changedEntry=updateRes[0];
+            state.cTraversed += updateRes[1];
             if(changedEntry>0||epochUpdate){
                 state.cUpdated+=changedEntry;
                 state.uUpdated++;
-                state.uTraversed++;
             }
            
-
-
-
 			this.printRaceInfo(state, verbosity);
 		}
 		return false;
@@ -294,8 +290,9 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
                     O_tp.incU();
                     updateU = true;
                 }
-               int changedEntry=O_tp.updateWithMax(O_tc, diff);
-               state.cTraversed+=Math.min(diff,state.numThreads);
+               int[] updateRes = O_tp.updateWithMax(O_tc, diff);
+               int changedEntry=updateRes[0];
+               state.cTraversed+=updateRes[1];
                if(changedEntry>0){
                 state.cUpdated+=changedEntry;
                 updateU = true;

@@ -13,5 +13,9 @@ public class HBEpoch {
 		HBEpochEngine engine = new HBEpochEngine(options.parserType, options.path, options.samplingRate, options.samplingRNGSeed);
 		engine.analyzeTrace(options.multipleRace, options.verbosity);
 		System.out.println("Time for analysis = " + engine.analysisTotalDuration + " milliseconds");
+		System.out.println("Num entry updated: "+(engine.state.updated));
+		System.out.println("Num entry visited in join operations: "+((long)(engine.state.numMax*engine.state.numThreads)));
+
+
 	}
 }

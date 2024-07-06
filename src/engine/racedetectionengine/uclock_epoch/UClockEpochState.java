@@ -37,21 +37,23 @@ public class UClockEpochState extends State {
 	public ArrayList<Boolean> threadsSampledStatus;
 
 	// stats
-	public long numOriginalAcquires;
-	public long numUClockAcquires;
-	public long numOriginalReleases;
-	public long numUClockReleases;
-	public long numOriginalJoins;
-	public long numUClockJoins;
-	public long uTraversed;
-	public long threadUUpdated;
-	public long threadCUpdated;
-	public long lockUUpdated;
-	public long lockCUpdated;
-	public long increments;
-	public long forks;
-	public long sameThreadAcquireSkipped;
-	public long uAcquireSkipped;
+	public int numOriginalAcquires;
+	public int numUClockAcquires;
+	public int numOriginalReleases;
+	public int numUClockReleases;
+	public int numOriginalJoins;
+	public int numUClockJoins;
+	public int uTraversed;
+	public int threadUUpdated;
+	public int threadCUpdated;
+	public int lockUUpdated;
+	public int lockCUpdated;
+	public int increments;
+	public int numOriginalForks;
+	public int numUclockForks;
+
+	public int sameThreadAcquireSkipped;
+	public int uAcquireSkipped;
 	public UClockEpochState(HashSet<Thread> tSet) {
 		initInternalData(tSet);
 		initData(tSet);
@@ -81,6 +83,7 @@ public class UClockEpochState extends State {
 		this.numUClockJoins = 0;
 		this.sameThreadAcquireSkipped=0;
 		this.uAcquireSkipped=0;
+		this.numUclockForks = 0;
 	}
 
 	private void initialize1DArrayOfVectorClocksWithBottom(ArrayList<VectorClock> arr, int len) {
@@ -175,7 +178,6 @@ public class UClockEpochState extends State {
 		int tIndex = threadToIndex.get(t);
 		int origVal = this.threadUVCs.get(tIndex).getClockIndex(tIndex);
 		this.threadUVCs.get(tIndex).setClockIndex(tIndex, (Integer)(origVal + 1));
-		this.uTraversed++;
 		threadUUpdated++;
 	}
 
