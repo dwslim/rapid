@@ -43,11 +43,11 @@ public class UClockEpochState extends State {
 	public int numUClockReleases;
 	public int numOriginalJoins;
 	public int numUClockJoins;
-	public int uTraversed;
-	public int threadUUpdated;
-	public int threadCUpdated;
-	public int lockUUpdated;
-	public int lockCUpdated;
+	public long uTraversed;
+	public long threadUUpdated;
+	public long threadCUpdated;
+	public long lockUUpdated;
+	public long lockCUpdated;
 	public int increments;
 	public int numOriginalForks;
 	public int numUclockForks;

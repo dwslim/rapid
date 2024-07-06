@@ -21,19 +21,19 @@ public class OrderedListState extends State{
     public int numThreads;
     private int numLocks;
     private int numVariables;
-    public long acquires;
-    public long joins;
-    public long releases;
-    public long forks;
+    public int acquires;
+    public int joins;
+    public int releases;
+    public int forks;
     public long cTraversed;
     public long cUpdated;
     public long uTraversed;
     public long uUpdated;
-    public long increments;
-    public long deepcopies;
-    public long uAcquireSkipped;
-    public long sameThreadAcquireSkipped;
-    public long saveOl;
+    public int increments;
+    public int deepcopies;
+    public int uAcquireSkipped;
+    public int sameThreadAcquireSkipped;
+    public int saveOl;
     // Data used for algorithm
     public ArrayList<OrderedClock> threadVCs;
     public ArrayList<OrderedClock> lockVCs;

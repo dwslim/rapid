@@ -28,8 +28,8 @@ public class UClockEpoch {
 		System.out.println("Num acquires skipped due to same threads: " + engine.state.sameThreadAcquireSkipped);
 		System.out.println("total acquires skipped: " +(engine.state.uAcquireSkipped+engine.state.sameThreadAcquireSkipped) );	
 		System.out.println("Num deep copies: " + engine.state.numUClockReleases);
-		System.out.println("Num entry visited in join operations: "+((long)(engine.state.numUClockAcquires+engine.state.numUClockReleases+engine.state.numUClockJoins+engine.state.numUclockForks)*engine.state.numThreads*2));
-		System.out.println("Num entry updated: "+(long)(engine.state.threadCUpdated+engine.state.threadUUpdated));
+		System.out.println("Num entry visited in join operations: "+(((long)engine.state.numUClockAcquires+engine.state.numUClockReleases+engine.state.numUClockJoins+engine.state.numUclockForks)*engine.state.numThreads*2));
+		System.out.println("Num entry updated: "+((long)engine.state.threadCUpdated+engine.state.threadUUpdated+engine.state.lockCUpdated+engine.state.lockUUpdated));
 		System.out.println("addtional o(1) u traversed: "+engine.state.uTraversed);
 		//System.out.println("Num uclock joins: " + engine.state.numUClockJoins);
 		System.out.println("Num thread C updated: " + engine.state.threadCUpdated);
