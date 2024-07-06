@@ -25,10 +25,10 @@ public class OrderedListState extends State{
     public int joins;
     public int releases;
     public int forks;
-    public int cTraversed;
-    public int cUpdated;
-    public int uTraversed;
-    public int uUpdated;
+    public long cTraversed;
+    public long cUpdated;
+    public long uTraversed;
+    public long uUpdated;
     public int increments;
     public int deepcopies;
     public int uAcquireSkipped;
