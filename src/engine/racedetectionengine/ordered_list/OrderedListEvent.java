@@ -105,7 +105,7 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
         boolean sharedbefore = O_t.getShared();
         //increment nodes traversed due to checking dirty epoch
         state.cTraversed++;
-
+        state.acqTraversed++;
         if(O_l.getE()-1>O_t.get(O_l.getT())){
             //updated dirty epoch
             state.cUpdated++;
@@ -124,9 +124,8 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
         state.cUpdated+=changedEntry;
         //updating nodes traversed
         int traversedEntry =updateRes[1];
-        if(traversedEntry>diff)
-        System.out.println("issue!");
         state.cTraversed+=traversedEntry;
+        state.acqTraversed+=traversedEntry;
         if(traversedEntry<state.numThreads){
             state.saveOl +=state.numThreads-traversedEntry;
         }

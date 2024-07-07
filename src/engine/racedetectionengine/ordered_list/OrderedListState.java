@@ -34,6 +34,7 @@ public class OrderedListState extends State{
     public int uAcquireSkipped;
     public int sameThreadAcquireSkipped;
     public long saveOl;
+    public long acqTraversed;
     // Data used for algorithm
     public ArrayList<OrderedClock> threadVCs;
     public ArrayList<OrderedClock> lockVCs;
@@ -71,6 +72,7 @@ public class OrderedListState extends State{
         this.uAcquireSkipped = 0; 
         this.sameThreadAcquireSkipped=0;
         this.saveOl = 0;
+        this.acqTraversed=0;
     }
 
     public void initData(HashSet<Thread> tSet) {
