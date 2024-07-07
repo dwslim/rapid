@@ -124,9 +124,11 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
         state.cUpdated+=changedEntry;
         //updating nodes traversed
         int traversedEntry =updateRes[1];
+        if(traversedEntry>diff)
+        System.out.println("issue!");
         state.cTraversed+=traversedEntry;
         if(traversedEntry<state.numThreads){
-            state.saveOl +=state.numThreads-diff;
+            state.saveOl +=state.numThreads-traversedEntry;
         }
         if(changedEntry>0||epochUpdate){
             state.uUpdated++;
@@ -257,7 +259,9 @@ public class OrderedListEvent extends RaceDetectionEvent<OrderedListState> {
                 state.cUpdated+=changedEntry;
                 state.uUpdated++;
             }
-           
+            VectorClock U_tc = state.getVectorClock(state.threadAugmentedVCs, this.getTarget());
+            U_tc.setClockIndex(O_tp.getT(), O_tp.getU());
+            state.uUpdated++;
 			this.printRaceInfo(state, verbosity);
 		}
 		return false;

@@ -33,7 +33,7 @@ public class OrderedListState extends State{
     public int deepcopies;
     public int uAcquireSkipped;
     public int sameThreadAcquireSkipped;
-    public int saveOl;
+    public long saveOl;
     // Data used for algorithm
     public ArrayList<OrderedClock> threadVCs;
     public ArrayList<OrderedClock> lockVCs;

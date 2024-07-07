@@ -242,7 +242,7 @@ public class UClockEpochEvent extends RaceDetectionEvent<UClockEpochState> {
 			int entryChanged=C_tc.updateMaxInPlace(C_tp);
 			if(entryChanged>0){
 				state.threadCUpdated+=entryChanged;
-				state.incThreadUEpoch(this.getThread());
+				state.incThreadUEpoch(this.getTarget());
 			}
 			state.threadUUpdated+=U_tc.updateMaxInPlace(U_tp);
 

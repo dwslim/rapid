@@ -22,7 +22,7 @@ public class HBEpochState extends State {
 	private int numLocks;
 	private int numVariables;
 	public int updated;
-	public int numMax;
+	public long numMax;
 	// Data used for algorithm
 	private ArrayList<Integer> clockThread;
 	public ArrayList<VectorClock> HBPredecessorThread;
